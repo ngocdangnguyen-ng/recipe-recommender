@@ -1,7 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 
+st.title(os.getcwd())
+st.title(os.listdir())
+
+"""
 # Importer les fonctions depuis vos autres fichiers Python
 from obtain import collect_data
 from scrub import clean_data
@@ -76,3 +81,4 @@ elif step == "Recommandations":
             st.write(recommended_recipes)
     else:
         st.write("Le modèle n'est pas encore créé. Veuillez d'abord créer le modèle.")
+"""
