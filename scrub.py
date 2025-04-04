@@ -38,7 +38,14 @@ df_cleaned = df_cleaned[(df_cleaned["prep_time (in mins)"] >= lower_bound) & (df
 df_cleaned.to_csv("~/Food_Recipe_cleaned.csv", index=False)
 print("\nLes données nettoyées ont été enregistrées sous 'Food_Recipe_cleaned.csv'.")
 
+def show_stats(df):
+    st.subheader("Répartition des types de cuisine")
+    st.bar_chart(df["cuisine"].value_counts())
 
+    st.subheader("Distribution du temps de préparation")
+    fig, ax = plt.subplots()
+    sns.boxplot(x=df["prep_time (in mins)"], ax=ax)
+    st.pyplot(fig)
 
 
 
