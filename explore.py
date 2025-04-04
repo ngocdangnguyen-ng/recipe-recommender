@@ -54,4 +54,13 @@ plt.title("Répartition des types de cuisine")
 plt.ylabel("")
 plt.show()
 
+import pandas as pd
+import streamlit as st
+
+def explore_data(df):
+    st.write("Statistiques générales :")
+    st.write(df.describe())
+    st.write("Répartition des types de cuisine :")
+    st.write(df["cuisine"].value_counts())
+
 print("\nAnalyse terminée, les graphiques et résultats sont affichés.")
