@@ -57,4 +57,8 @@ plt.show()
 print("\nAnalyse terminée, les graphiques et résultats sont affichés.")
 
     return df_cleaned
+import pandas as pd
+
+def recommend_recipes(df, recipe_name):
+    return df[df["recipe_name"].str.contains(recipe_name, case=False, na=False)].head()
 
