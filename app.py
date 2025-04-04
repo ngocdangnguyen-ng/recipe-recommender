@@ -4,7 +4,9 @@ import pandas as pd
 from obtain import load_data  # Tu dois avoir une fonction dans obtain_data.py
 from scrub import clean_data
 from explore import explore_data
-from model import recommend_recipes
+from model import analyze_data, recommend_recipes
+df = analyze_data("Food_Recipe_cleaned.csv")
+print(recommend_recipes(df, "Pizza"))
 
 
 # Titre de l'app
