@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-from obtain_data import load_data  # Tu dois avoir une fonction dans obtain_data.py
+from obtain import load_data  # Tu dois avoir une fonction dans obtain_data.py
 from scrub import clean_data
 from explore import explore_data
 from model import recommend_recipes
