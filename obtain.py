@@ -20,9 +20,10 @@ print(df["cuisine"].value_counts())
 df.to_csv("Food_Recipe_raw.csv", index=False)
 print("\nLes données brutes ont été enregistrées sous 'Food_Recipe_raw.csv'.")
 
-def collect_data():
-    data = pd.read_csv("foodrecipe.csv")
-    return data
+def load_data(file_path="Food_Recipe.csv"):
+    df = pd.read_csv(file_path)
+    return df
+
 
 
 
