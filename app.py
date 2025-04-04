@@ -4,7 +4,11 @@ import pandas as pd
 from obtain import load_data  # Tu dois avoir une fonction dans obtain_data.py
 from scrub import clean_data
 from explore import explore_data
+import importlib
+import model
+importlib.reload(model)
 from model import recommend_recipes
+
 
 # Titre de l'app
 st.title("🍽️ Recommandateur de Recettes")
