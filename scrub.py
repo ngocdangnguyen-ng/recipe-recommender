@@ -38,16 +38,21 @@ df_cleaned = df_cleaned[(df_cleaned["prep_time (in mins)"] >= lower_bound) & (df
 df_cleaned.to_csv("~/Food_Recipe_cleaned.csv", index=False)
 print("\nLes données nettoyées ont été enregistrées sous 'Food_Recipe_cleaned.csv'.")
 
-def show_stats(df):
-    st.subheader("Répartition des types de cuisine")
-    st.bar_chart(df["cuisine"].value_counts())
+def clean_data(df):
+    df_cleaned = df.dropna().drop_duplicates()
 
-    st.subheader("Distribution du temps de préparation")
-    fig, ax = plt.subplots()
-    sns.boxplot(x=df["prep_time (in mins)"], ax=ax)
-    st.pyplot(fig)
+    Q1 = df_cleaned["prep_time (in mins)"].quantile(0.25)
+    Q3 = df_cleaned["prep_time (in mins)"].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
 
+    df_cleaned = df_cleaned[
+        (df_cleaned["prep_time (in mins)"] >= lower_bound) &
+        (df_cleaned["prep_time (in mins)"] <= upper_bound)
+    ]
 
+    return df_cleaned
 
 #gestion des valeurs manquantes : Suppression des lignes incomplètes.
 #Élimination des doublons : Suppression des entrées répétées.
