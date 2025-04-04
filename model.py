@@ -59,4 +59,4 @@ def analyze_data(file_path):
     return df_cleaned
 
 def recommend_recipes(df, recipe_name):
-    return df[df["recipe_name"].str.contains(recipe_name, case=False, na=False)].head()
+    return df[df["name"].str.contains(name, case=False, na=False)].head()
