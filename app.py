@@ -6,7 +6,7 @@ from scrub import clean_data
 from explore import explore_data
 from model import analyze_data, recommend_recipes
 df = analyze_data("Food_Recipe_cleaned.csv")
-print(recommend_recipes(df, "Pizza"))
+print(recommend_recipes(df, "Vankaya Ulli Karam Recipe"))
 
 
 # Titre de l'app
