@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd  # Assurez-vous que pandas est importé
 
 def search_by_name(df, recipe_name):
     recommendations = df[df["name"].str.contains(recipe_name, case=False, na=False)]
