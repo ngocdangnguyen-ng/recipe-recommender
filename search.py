@@ -27,7 +27,7 @@ def search_by_category(df, category):
     if category == "Easy Dinner":
         filtered_recipes = df[df["course"].str.contains("dinner", case=False, na=False)]
     elif category == "Under 30 Minutes":
-        filtered_recipes = df[df["prep_time (in mins)"] <= 30]
+        filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30]
     elif category == "Chicken":
         filtered_recipes = df[df["ingredients_name"].str.contains("chicken", case=False, na=False)]
     elif category == "Breakfast":
