@@ -34,11 +34,21 @@ elif page == "Popular":
     if st.button("Rechercher"):
         search_by_category(df, category)
 
+# Ajouter des boutons pour les filtres
+st.sidebar.header("Filtres")
+difficulty = st.sidebar.radio("Difficulty", ["Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
+diets = st.sidebar.radio("Diets", ["Non Vegetarian", "Vegetarian", "Eggtarian"])
+meal = st.sidebar.radio("Meal", ["Dinner", "Breakfast", "Snack"])
+cuisine = st.sidebar.radio("Cuisine", ["Japanese", "Indian", "Italian"])
+
+if st.sidebar.button("Appliquer les filtres"):
+    search_by_filters(df, difficulty, diets, meal, cuisine)
+
 # Ajouter du style CSS personnalisé
 st.markdown("""
     <style>
     .stButton>button {
-        background-color: #4CAF50;
+        background-color: #FF6347;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -51,14 +61,22 @@ st.markdown("""
         border-radius: 8px;
     }
     .stTextInput>div>div>input {
-        border: 2px solid #4CAF50;
+        border: 2px solid #FF6347;
         border-radius: 8px;
         padding: 10px;
     }
-    .stSelectbox>div>div>select {
-        border: 2px solid #4CAF50;
+    .stRadio>div>div>div>label {
+        background-color: #FF6347;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
         border-radius: 8px;
-        padding: 10px;
     }
     </style>
     """, unsafe_allow_html=True)
