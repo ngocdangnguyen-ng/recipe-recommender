@@ -23,6 +23,25 @@ def search_by_ingredients(df, ingredients):
     else:
         st.warning("Veuillez entrer des ingrédients pour la recherche.")
 
+def search_by_category(df, category):
+    if category == "Easy Dinner":
+        filtered_recipes = df[df["course"].str.contains("dinner", case=False, na=False)]
+    elif category == "Under 30 Minutes":
+        filtered_recipes = df[df["prep_time (in mins)"] <= 30]
+    elif category == "Chicken":
+        filtered_recipes = df[df["ingredients_name"].str.contains("chicken", case=False, na=False)]
+    elif category == "Breakfast":
+        filtered_recipes = df[df["course"].str.contains("breakfast", case=False, na=False)]
+    elif category == "Desserts":
+        filtered_recipes = df[df["course"].str.contains("dessert", case=False, na=False)]
+    
+    if not filtered_recipes.empty:
+        st.write(f"### Recettes pour la catégorie {category} :")
+        for index, row in filtered_recipes.iterrows():
+            display_recipe(row)
+    else:
+        st.warning(f"Aucune recette trouvée pour la catégorie {category} !")
+
 def display_recipe(row):
     with st.container():
         col1, col2 = st.columns([1, 3])
