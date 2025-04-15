@@ -8,6 +8,7 @@ def load_data():
     return pd.read_csv("Food_Recipe_cleaned.csv")  # Chargement auto
 
 df = load_data()  # On stocke les données
+
 # 🔹 Interface utilisateur
 st.title("🍽️ Recommandateur de Recettes")
 
@@ -22,18 +23,20 @@ if st.button("Rechercher"):
                 col1, col2 = st.columns([1, 3])
                 with col1:
                     if pd.notna(row["image_url"]):
-                        st.image(row["image_url"], width=100)
+                        st.image(row["image_url"], width=150)  # Taille de l'image ajustée
                 with col2:
-                    st.subheader(row["name"])
-                    st.write("**Description :**", row["description"])
-                    st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Course :**", row["course"])
-                    st.write("**Diet :**", row["diet"])
-                    st.write("**Ingrédients :**", row["ingredients_name"])
-                    st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
-                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
-                    st.write("**Instructions :**", row["instructions"])
+                    with st.expander(row["name"]):
+                        st.write("**Description :**", row["description"])
+                        st.write("**Cuisine :**", row["cuisine"])
+                        st.write("**Course :**", row["course"])
+                        st.write("**Diet :**", row["diet"])
+                        st.write("**Ingrédients :**", row["ingredients_name"])
+                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                        st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
+                        st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
+                        st.write("**Instructions :**", row["instructions"])
+                        if pd.notna(row["image_url"]):
+                            st.image(row["image_url"], caption=row["name"], width=300)  # Taille de l'image ajustée
         
         # 🔹 Afficher les recettes de la même cuisine
         cuisine_type = recommendations.iloc[0]["cuisine"]
@@ -44,17 +47,19 @@ if st.button("Rechercher"):
                 col1, col2 = st.columns([1, 3])
                 with col1:
                     if pd.notna(row["image_url"]):
-                        st.image(row["image_url"], width=100)
+                        st.image(row["image_url"], width=150)  # Taille de l'image ajustée
                 with col2:
-                    st.subheader(row["name"])
-                    st.write("**Description :**", row["description"])
-                    st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Course :**", row["course"])
-                    st.write("**Diet :**", row["diet"])
-                    st.write("**Ingrédients :**", row["ingredients_name"])
-                    st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
-                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
-                    st.write("**Instructions :**", row["instructions"])
+                    with st.expander(row["name"]):
+                        st.write("**Description :**", row["description"])
+                        st.write("**Cuisine :**", row["cuisine"])
+                        st.write("**Course :**", row["course"])
+                        st.write("**Diet :**", row["diet"])
+                        st.write("**Ingrédients :**", row["ingredients_name"])
+                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                        st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
+                        st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
+                        st.write("**Instructions :**", row["instructions"])
+                        if pd.notna(row["image_url"]):
+                            st.image(row["image_url"], caption=row["name"], width=300)  # Taille de l'image ajustée
     else:
         st.warning("Aucune recette similaire trouvée ! Essayez un autre nom.")
