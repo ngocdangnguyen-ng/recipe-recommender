@@ -18,15 +18,18 @@ page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "Wha
 if page == "Accueil":
     st.write("Bienvenue sur le Recommandateur de Recettes ! Utilisez la barre de navigation pour commencer.")
 elif page == "Rechercher par nom":
+    st.header("Rechercher par nom")
     recipe_name = st.text_input("Entrez un nom de recette :", "")
     if st.button("Rechercher"):
         search_by_name(df, recipe_name)
 elif page == "What's in your kitchen?":
+    st.header("What's in your kitchen?")
     st.write("Find recipes based on what you already have at home!")
     ingredients = st.text_input("Enter up to 3 ingredients separated by commas:", "")
     if st.button("Find recipes"):
         search_by_ingredients(df, ingredients)
 elif page == "Popular":
+    st.header("Popular Recipes")
     category = st.selectbox("Choisissez une catégorie :", ["Easy Dinner", "Under 30 Minutes", "Chicken", "Breakfast", "Desserts"])
     if st.button("Rechercher"):
         search_by_category(df, category)
@@ -48,6 +51,11 @@ st.markdown("""
         border-radius: 8px;
     }
     .stTextInput>div>div>input {
+        border: 2px solid #4CAF50;
+        border-radius: 8px;
+        padding: 10px;
+    }
+    .stSelectbox>div>div>select {
         border: 2px solid #4CAF50;
         border-radius: 8px;
         padding: 10px;
