@@ -8,7 +8,6 @@ def load_data():
     return pd.read_csv("Food_Recipe_cleaned.csv")  # Chargement auto
 
 df = load_data()  # On stocke les données
-
 # 🔹 Interface utilisateur
 st.title("🍽️ Recommandateur de Recettes")
 
