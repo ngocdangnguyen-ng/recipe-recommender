@@ -75,9 +75,3 @@ def display_recipe(row):
             with st.expander("Voir tout"):
                 st.write("**Description :**", row["description"])
                 st.write("**Course :**", row["course"])
-                st.write("**Diet :**", row["diet"])
-                st.write("**Ingrédients :**", row["ingredients_name"])
-                st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                st.write("**Instructions :**", row["instructions"])
-                if pd.notna(row["image_url"]):
-                    st.image(row["image_url"], caption=row["name"], width=300)  # Taille de l'image ajustée
