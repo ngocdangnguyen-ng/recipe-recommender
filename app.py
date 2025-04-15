@@ -27,11 +27,11 @@ if st.button("Rechercher"):
                 with col2:
                     st.subheader(row["name"])
                     st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Course :**", row["course"])
                     st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
                     st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
-                    if st.button("Voir tout", key=f"btn_{index}"):
+                    with st.expander("Voir tout"):
                         st.write("**Description :**", row["description"])
+                        st.write("**Course :**", row["course"])
                         st.write("**Diet :**", row["diet"])
                         st.write("**Ingrédients :**", row["ingredients_name"])
                         st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
@@ -52,11 +52,11 @@ if st.button("Rechercher"):
                 with col2:
                     st.subheader(row["name"])
                     st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Course :**", row["course"])
                     st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
                     st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
-                    if st.button("Voir tout", key=f"btn_same_{index}"):
+                    with st.expander("Voir tout"):
                         st.write("**Description :**", row["description"])
+                        st.write("**Course :**", row["course"])
                         st.write("**Diet :**", row["diet"])
                         st.write("**Ingrédients :**", row["ingredients_name"])
                         st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
