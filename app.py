@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from search import search_by_name, search_by_ingredients
+from search import search_by_name, search_by_ingredients, search_by_category
 
 # Charger les données dès l'ouverture du site
 @st.cache_data
@@ -13,7 +13,7 @@ df = load_data()  # On stocke les données
 st.title("🍽️ Recommandateur de Recettes")
 
 # Barre de navigation
-page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?"])
+page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Popular"])
 
 if page == "Accueil":
     st.write("Bienvenue sur le Recommandateur de Recettes ! Utilisez la barre de navigation pour commencer.")
@@ -26,6 +26,10 @@ elif page == "What's in your kitchen?":
     ingredients = st.text_input("Enter up to 3 ingredients separated by commas:", "")
     if st.button("Find recipes"):
         search_by_ingredients(df, ingredients)
+elif page == "Popular":
+    category = st.selectbox("Choisissez une catégorie :", ["Easy Dinner", "Under 30 Minutes", "Chicken", "Breakfast", "Desserts"])
+    if st.button("Rechercher"):
+        search_by_category(df, category)
 
 # Ajouter du style CSS personnalisé
 st.markdown("""
