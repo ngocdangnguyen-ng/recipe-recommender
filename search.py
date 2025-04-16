@@ -87,7 +87,7 @@ def search_by_filters(df, difficulty, diets, meal, cuisine):
     if difficulty == "All":
 
         filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) >= 0]
-    elif difficulty == "Under 1 Hour:
+    elif difficulty == "Under 1 Hour":
 
         filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 60]
 
