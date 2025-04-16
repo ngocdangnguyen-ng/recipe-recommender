@@ -9,13 +9,10 @@ from search import search_by_name, search_by_ingredients, search_by_category, se
 # Charger les données dès l'ouverture du site
 
 @st.cache_data
-
 def load_data():
-
-    return pd.read_csv("Food_Recipe_cleaned.csv")  # Chargement auto
-
-
-df = load_data()  # On stocke les données
+    df = pd.read_csv("Food_Recipe_cleaned.csv")
+    df = df.dropna(subset=["image_url"])
+    return df
 
 
 # Interface utilisateur
