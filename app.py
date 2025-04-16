@@ -72,7 +72,10 @@ difficulty = st.sidebar.radio("Difficulty", ["Under 1 Hour", "Under 45 Minutes",
 
 diets = st.sidebar.radio("Diets", ["Non Vegetarian", "Vegetarian", "Eggtarian"])
 
-meal = st.sidebar.radio("Meal", ["Dinner", "Breakfast", "Snack"])
+meal = st.sidebar.radio("Meal", [
+    "Appetizer", "Breakfast", "Dessert", "Dinner",
+    "Lunch", "Main Course", "Side Dish", "Snack"
+])
 
 cuisine = st.sidebar.radio("Cuisine", ["Arab", "Asian", "Bengali", "Chinese", "European",
     "French", "Greek", "Indian", "Indonesian", "Italian",
