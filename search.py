@@ -1,13 +1,12 @@
-import streamlit as st
-import pandas as pd  # Assurez-vous que pandas est importé
-
-# Fonction de pagination
 def paginate(df, page_size=10):
-    total_pages = (len(df) - 1) // page_size + 1
-    page_num = st.number_input("Page", min_value=1, max_value=total_pages, value=1)
-    start = (page_num - 1) * page_size
-    end = start + page_size
-    return df.iloc[start:end]
+    total_pages = (len(df) - 1) // page_size + 1  # Total des pages
+    page_num = st.number_input("Page", min_value=1, max_value=total_pages, value=1, step=1)
+
+    start = (page_num - 1) * page_size  # Début des résultats de la page
+    end = start + page_size  # Fin des résultats de la page
+    paginated_df = df.iloc[start:end]  # Découper le dataframe pour la page actuelle
+    
+    return paginated_df, total_pages
 
 def search_by_name(df, recipe_name):
     recommendations = df[df["name"].str.contains(recipe_name, case=False, na=False)]
@@ -16,10 +15,15 @@ def search_by_name(df, recipe_name):
         st.write("### Recettes similaires :")
 
         # Appliquer la pagination
-        paginated_recipes = paginate(recommendations)
+        paginated_recipes, total_pages = paginate(recommendations)
 
+        # Afficher les recettes paginées
         for index, row in paginated_recipes.iterrows():
             display_recipe(row)
+
+        # Afficher les numéros de page si plus d'une page
+        if total_pages > 1:
+            st.write(f"Page 1 / {total_pages}")  # Page actuelle
     else:
         st.warning("Aucune recette similaire trouvée ! Essayez un autre nom.")
 
@@ -32,10 +36,15 @@ def search_by_ingredients(df, ingredients):
             st.write("### Recettes trouvées :")
 
             # Appliquer la pagination
-            paginated_recipes = paginate(filtered_recipes)
+            paginated_recipes, total_pages = paginate(filtered_recipes)
 
+            # Afficher les recettes paginées
             for index, row in paginated_recipes.iterrows():
                 display_recipe(row)
+
+            # Afficher les numéros de page si plus d'une page
+            if total_pages > 1:
+                st.write(f"Page 1 / {total_pages}")
         else:
             st.warning("Aucune recette trouvée avec ces ingrédients ! Essayez d'autres ingrédients.")
     else:
@@ -57,10 +66,15 @@ def search_by_category(df, category):
         st.write(f"### Recettes pour la catégorie {category} :")
 
         # Appliquer la pagination
-        paginated_recipes = paginate(filtered_recipes)
+        paginated_recipes, total_pages = paginate(filtered_recipes)
 
+        # Afficher les recettes paginées
         for index, row in paginated_recipes.iterrows():
             display_recipe(row)
+
+        # Afficher les numéros de page si plus d'une page
+        if total_pages > 1:
+            st.write(f"Page 1 / {total_pages}")
     else:
         st.warning(f"Aucune recette trouvée pour la catégorie {category} !")
 
@@ -80,10 +94,15 @@ def search_by_filters(df, difficulty, diets, meal, cuisine):
         st.write(f"### Recettes pour les filtres sélectionnés :")
 
         # Appliquer la pagination
-        paginated_recipes = paginate(filtered_recipes)
+        paginated_recipes, total_pages = paginate(filtered_recipes)
 
+        # Afficher les recettes paginées
         for index, row in paginated_recipes.iterrows():
             display_recipe(row)
+
+        # Afficher les numéros de page si plus d'une page
+        if total_pages > 1:
+            st.write(f"Page 1 / {total_pages}")
     else:
         st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
 
