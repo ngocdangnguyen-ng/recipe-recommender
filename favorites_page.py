@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-# Initialisation des favoris
-if "favorites" not in st.session_state:
-    st.session_state.favorites = []
-
 def display_favorites():
     st.title("Mes recettes favorites")
 
