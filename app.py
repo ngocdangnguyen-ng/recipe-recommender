@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+import requests
+from PIL import Image
+from io import BytesIO
 from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters, display_recipe
 
 
