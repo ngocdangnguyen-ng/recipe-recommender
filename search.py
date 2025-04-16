@@ -83,43 +83,26 @@ def search_by_category(df, category):
 
 
 def search_by_filters(df, difficulty, diets, meal, cuisine):
-
     if difficulty == "All":
-
-        filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) >= 0]
+        filtered_recipes = df
     elif difficulty == "Under 1 Hour":
-
         filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 60]
-
     elif difficulty == "Under 45 Minutes":
-
         filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 45]
-
     elif difficulty == "Under 30 Minutes":
-
         filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30]
 
-    
-
     filtered_recipes = filtered_recipes[filtered_recipes["diet"].str.contains(diets, case=False, na=False)]
-
     filtered_recipes = filtered_recipes[filtered_recipes["course"].str.contains(meal, case=False, na=False)]
-
     filtered_recipes = filtered_recipes[filtered_recipes["cuisine"].str.contains(cuisine, case=False, na=False)]
 
-    
-
     if not filtered_recipes.empty:
-
         st.write(f"### Recettes pour les filtres sélectionnés :")
-
         for index, row in filtered_recipes.iterrows():
-
             display_recipe(row)
-
     else:
-
         st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
+
 
 
 def display_recipe(row):
