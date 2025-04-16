@@ -42,7 +42,7 @@ if page == "Accueil":
                 st.write(f"Erreur : {e}")
             # Display the name of the dish and total time
             st.write(f"**{row['name']}**")
-            total_time = row['prep_time'] + row['cook_time']
+            total_time = row['prep_time (in mins)'] + row['cook_time (in mins)']
             st.write(f"Temps total: {total_time} minutes")
 
 elif page == "Rechercher par nom":
