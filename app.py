@@ -74,8 +74,10 @@ diets = st.sidebar.radio("Diets", ["Non Vegetarian", "Vegetarian", "Eggtarian"])
 
 meal = st.sidebar.radio("Meal", ["Dinner", "Breakfast", "Snack"])
 
-cuisine = st.sidebar.radio("Cuisine", ["Japanese", "Indian", "Italian"])
-
+cuisine = st.sidebar.radio("Cuisine", ["Arab", "Asian", "Bengali", "Chinese", "European",
+    "French", "Greek", "Indian", "Indonesian", "Italian",
+    "Japanese", "Korean", "Malaysian", "Mexican",
+    "Middle Eastern", "Tamil Nadun", "Thai"])
 
 if st.sidebar.button("Appliquer les filtres"):
 
