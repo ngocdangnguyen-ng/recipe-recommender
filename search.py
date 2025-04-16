@@ -1,102 +1,44 @@
 import streamlit as st
 import pandas as pd
 
-# Fonction d'ajout aux favoris
-def add_to_favorites(recipe):
-    if recipe not in st.session_state.favorites:
-        st.session_state.favorites.append(recipe)
-        st.success("Ajouté aux favoris !")
+def search_by_name(df, recipe_name):
+    recommendations = df[df["name"].str.contains(recipe_name, case=False, na=False)]
+    if not recommendations.empty:
+        st.write("### Recettes similaires :")
+        for index, row in recommendations.iterrows():
+            display_recipe(row)
     else:
-        st.info("Cette recette est déjà dans vos favoris.")
+        st.warning("Aucune recette similaire trouvée ! Essayez un autre nom.")
 
-# Recherche par nom
-def search_by_name(df, name):
-    results = df[df["name"].str.contains(name, case=False, na=False)]
-    
-    if results.empty:
-        st.warning("Aucune recette trouvée avec ce nom.")
+def search_by_ingredients(df, ingredients):
+    if ingredients:
+        ingredient_list = ingredients.split(',')
+        filtered_recipes = df[df['ingredients_name'].apply(lambda x: all(ingredient.strip().lower() in x.lower() for ingredient in ingredient_list))]
+        if not filtered_recipes.empty:
+            st.write("### Recettes trouvées :")
+            for index, row in filtered_recipes.iterrows():
+                display_recipe(row)
+        else:
+            st.warning("Aucune recette trouvée avec ces ingrédients ! Essayez d'autres ingrédients.")
     else:
-        for i, (_, row) in enumerate(results.iterrows()):
-            with st.container():
-                col1, col2 = st.columns([1, 3])
-                with col1:
-                    if pd.notna(row["image_url"]):
-                        st.image(row["image_url"], width=150)
-                with col2:
-                    st.subheader(row["name"])
-                    st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-                    with st.expander("Voir tout"):
-                        st.write("**Description :**", row["description"])
-                        st.write("**Course :**", row["course"])
-                        st.write("**Diet :**", row["diet"])
-                        st.write("**Ingrédients :**", row["ingredients_name"])
-                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                        st.write("**Instructions :**", row["instructions"])
-                    if st.button(f"Ajouter aux favoris - name_{i}", key=f"fav_name_{i}"):
-                        add_to_favorites(row.to_dict())
+        st.warning("Veuillez entrer des ingrédients pour la recherche.")
 
-# Recherche par ingrédients
-def search_by_ingredients(df, ingredients_str):
-    ingredients = [i.strip().lower() for i in ingredients_str.split(",")]
-    mask = df["ingredients_name"].apply(lambda x: any(ing in str(x).lower() for ing in ingredients))
-
-    results = df[mask]
-
-    if results.empty:
-        st.warning("Aucune recette trouvée avec ces ingrédients.")
-    else:
-        for i, (_, row) in enumerate(results.iterrows()):
-            with st.container():
-                col1, col2 = st.columns([1, 3])
-                with col1:
-                    if pd.notna(row["image_url"]):
-                        st.image(row["image_url"], width=150)
-                with col2:
-                    st.subheader(row["name"])
-                    st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-                    with st.expander("Voir tout"):
-                        st.write("**Description :**", row["description"])
-                        st.write("**Course :**", row["course"])
-                        st.write("**Diet :**", row["diet"])
-                        st.write("**Ingrédients :**", row["ingredients_name"])
-                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                        st.write("**Instructions :**", row["instructions"])
-                    if st.button(f"Ajouter aux favoris - ing_{i}", key=f"fav_ing_{i}"):
-                        add_to_favorites(row.to_dict())
-
-# Recherche par catégorie
 def search_by_category(df, category):
-    results = df[df["course"].str.contains(category, case=False, na=False)]
-
-    if results.empty:
-        st.warning(f"Aucune recette trouvée pour la catégorie {category}.")
+    category_filters = {
+        "Easy Dinner": df["course"].str.contains("dinner", case=False, na=False),
+        "Under 30 Minutes": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30,
+        "Chicken": df["ingredients_name"].str.contains("chicken", case=False, na=False),
+        "Breakfast": df["course"].str.contains("breakfast", case=False, na=False),
+        "Desserts": df["course"].str.contains("dessert", case=False, na=False)
+    }
+    filtered_recipes = df[category_filters.get(category, pd.Series([False] * len(df)))]
+    if not filtered_recipes.empty:
+        st.write(f"### Recettes pour la catégorie {category} :")
+        for index, row in filtered_recipes.iterrows():
+            display_recipe(row)
     else:
-        for i, (_, row) in enumerate(results.iterrows()):
-            with st.container():
-                col1, col2 = st.columns([1, 3])
-                with col1:
-                    if pd.notna(row["image_url"]):
-                        st.image(row["image_url"], width=150)
-                with col2:
-                    st.subheader(row["name"])
-                    st.write("**Cuisine :**", row["cuisine"])
-                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-                    with st.expander("Voir tout"):
-                        st.write("**Description :**", row["description"])
-                        st.write("**Course :**", row["course"])
-                        st.write("**Diet :**", row["diet"])
-                        st.write("**Ingrédients :**", row["ingredients_name"])
-                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                        st.write("**Instructions :**", row["instructions"])
-                    if st.button(f"Ajouter aux favoris - cat_{i}", key=f"fav_cat_{i}"):
-                        add_to_favorites(row.to_dict())
+        st.warning(f"Aucune recette trouvée pour la catégorie {category} !")
 
-# Recherche avec filtres (difficulté, régime, etc.)
 def search_by_filters(df, difficulty=None, diets=None, meal=None, cuisine=None):
     filtered_recipes = df.copy()
     
@@ -123,3 +65,24 @@ def search_by_filters(df, difficulty=None, diets=None, meal=None, cuisine=None):
             display_recipe(row)
     else:
         st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
+
+def display_recipe(row):
+    with st.container():
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            if pd.notna(row["image_url"]):
+                st.image(row["image_url"], width=150)
+        with col2:
+            st.subheader(row["name"])
+            st.write("**Cuisine :**", row["cuisine"])
+            st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
+            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
+            with st.expander("Voir tout"):
+                st.write("**Description :**", row["description"])
+                st.write("**Course :**", row["course"])
+                st.write("**Diet :**", row["diet"])
+                st.write("**Ingrédients :**", row["ingredients_name"])
+                st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                st.write("**Instructions :**", row["instructions"])
+                if pd.notna(row["image_url"]):
+                    st.image(row["image_url"], caption=row["name"], width=300)
