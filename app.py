@@ -26,11 +26,23 @@ page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "Wha
 
 
 if page == "Accueil":
-    st.write("Bienvenue sur le Recommandateur de Recettes ! \U0001f60a")
-    st.markdown("## Here's some food I recommend you 👇")
-    random_recipes = df.sample(n=10, random_state=42)
-    for _, row in random_recipes.iterrows():
-        display_recipe(row)
+    st.subheader("🔥 Here's some food I recommend you")
+
+    random_recipes = df.sample(9)
+
+    cols = st.columns(3)
+    for i, (idx, row) in enumerate(random_recipes.iterrows()):
+        with cols[i % 3]:
+            try:
+                response = requests.get(row["image_url"])
+                image = Image.open(BytesIO(response.content)).resize((300, 300))
+                st.image(image)
+            except:
+                st.image("https://via.placeholder.com/300", caption="Image non dispo")
+
+            total_time = int(row["prep_time (in mins)"]) + int(row["cook_time (in mins)"])
+            st.markdown(f"**{row['name']}**")
+            st.markdown(f"🕒 {total_time} minutes")
 
 elif page == "Rechercher par nom":
 
