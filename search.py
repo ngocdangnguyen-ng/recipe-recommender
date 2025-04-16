@@ -39,17 +39,23 @@ def search_by_category(df, category):
     else:
         st.warning(f"Aucune recette trouvée pour la catégorie {category} !")
 
-def search_by_filters(df, difficulty, diets, meal, cuisine):
-    difficulty_filters = {
-        "Under 1 Hour": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 60,
-        "Under 45 Minutes": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 45,
-        "Under 30 Minutes": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30
-    }
-    filtered_recipes = df[difficulty_filters.get(difficulty, pd.Series([True] * len(df)))]
+def search_by_filters(df, difficulty=None, diets=None, meal=None, cuisine=None):
+    filtered_recipes = df.copy()
+    
+    if difficulty:
+        difficulty_filters = {
+            "Under 1 Hour": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 60,
+            "Under 45 Minutes": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 45,
+            "Under 30 Minutes": (df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30
+        }
+        filtered_recipes = filtered_recipes[difficulty_filters.get(difficulty, pd.Series([True] * len(df)))]
+    
     if diets:
         filtered_recipes = filtered_recipes[filtered_recipes["diet"].str.contains(diets, case=False, na=False)]
+    
     if meal:
         filtered_recipes = filtered_recipes[filtered_recipes["course"].str.contains(meal, case=False, na=False)]
+    
     if cuisine:
         filtered_recipes = filtered_recipes[filtered_recipes["cuisine"].str.contains(cuisine, case=False, na=False)]
     
