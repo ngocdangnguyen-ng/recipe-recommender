@@ -34,15 +34,17 @@ if page == "Accueil":
     for i, (idx, row) in enumerate(random_recipes.iterrows()):
         with cols[i % 3]:
             try:
-                response = requests.get(row["image_url"])
-                image = Image.open(BytesIO(response.content)).resize((300, 300))
-                st.image(image)
-            except:
+                response = requests.get(row["image_url"], timeout=5)
+                if response.status_code == 200:
+                    image = Image.open(BytesIO(response.content)).resize((300, 300))
+                    st.image(image)
+                else:
+                    st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                    st.write(f"Erreur {response.status_code} pour {row['image_url']}")
+            except Exception as e:
                 st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                st.write(f"Erreur : {e}")
 
-            total_time = int(row["prep_time (in mins)"]) + int(row["cook_time (in mins)"])
-            st.markdown(f"**{row['name']}**")
-            st.markdown(f"🕒 {total_time} minutes")
 
 elif page == "Rechercher par nom":
 
