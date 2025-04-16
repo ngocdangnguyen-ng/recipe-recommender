@@ -17,18 +17,28 @@ def search_by_name(df, name):
         st.warning("Aucune recette trouvée avec ce nom.")
     else:
         for i, (_, row) in enumerate(results.iterrows()):
-            st.subheader(row["name"])
-            st.write("**Cuisine :**", row["cuisine"])
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-            st.write(row["description"])
-
-            if st.button(f"Ajouter aux favoris - name_{i}", key=f"fav_name_{i}"):
-                add_to_favorites(row.to_dict())
+            with st.container():
+                col1, col2 = st.columns([1, 3])
+                with col1:
+                    if pd.notna(row["image_url"]):
+                        st.image(row["image_url"], width=150)
+                with col2:
+                    st.subheader(row["name"])
+                    st.write("**Cuisine :**", row["cuisine"])
+                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
+                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
+                    with st.expander("Voir tout"):
+                        st.write("**Description :**", row["description"])
+                        st.write("**Course :**", row["course"])
+                        st.write("**Diet :**", row["diet"])
+                        st.write("**Ingrédients :**", row["ingredients_name"])
+                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                        st.write("**Instructions :**", row["instructions"])
+                    if st.button(f"Ajouter aux favoris - name_{i}", key=f"fav_name_{i}"):
+                        add_to_favorites(row.to_dict())
 
 # Recherche par ingrédients
 def search_by_ingredients(df, ingredients_str):
-    # On nettoie et prépare la liste des ingrédients
     ingredients = [i.strip().lower() for i in ingredients_str.split(",")]
     mask = df["ingredients_name"].apply(lambda x: any(ing in str(x).lower() for ing in ingredients))
 
@@ -38,15 +48,25 @@ def search_by_ingredients(df, ingredients_str):
         st.warning("Aucune recette trouvée avec ces ingrédients.")
     else:
         for i, (_, row) in enumerate(results.iterrows()):
-            st.subheader(row["name"])
-            st.write("**Ingrédients :**", ", ".join(row["ingredients_name"].split(",")))
-            st.write("**Cuisine :**", row["cuisine"])
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-            st.write(row["description"])
-
-            if st.button(f"Ajouter aux favoris - ing_{i}", key=f"fav_ing_{i}"):
-                add_to_favorites(row.to_dict())
+            with st.container():
+                col1, col2 = st.columns([1, 3])
+                with col1:
+                    if pd.notna(row["image_url"]):
+                        st.image(row["image_url"], width=150)
+                with col2:
+                    st.subheader(row["name"])
+                    st.write("**Cuisine :**", row["cuisine"])
+                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
+                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
+                    with st.expander("Voir tout"):
+                        st.write("**Description :**", row["description"])
+                        st.write("**Course :**", row["course"])
+                        st.write("**Diet :**", row["diet"])
+                        st.write("**Ingrédients :**", row["ingredients_name"])
+                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                        st.write("**Instructions :**", row["instructions"])
+                    if st.button(f"Ajouter aux favoris - ing_{i}", key=f"fav_ing_{i}"):
+                        add_to_favorites(row.to_dict())
 
 # Recherche par catégorie
 def search_by_category(df, category):
@@ -56,14 +76,25 @@ def search_by_category(df, category):
         st.warning(f"Aucune recette trouvée pour la catégorie {category}.")
     else:
         for i, (_, row) in enumerate(results.iterrows()):
-            st.subheader(row["name"])
-            st.write("**Cuisine :**", row["cuisine"])
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-            st.write(row["description"])
-
-            if st.button(f"Ajouter aux favoris - cat_{i}", key=f"fav_cat_{i}"):
-                add_to_favorites(row.to_dict())
+            with st.container():
+                col1, col2 = st.columns([1, 3])
+                with col1:
+                    if pd.notna(row["image_url"]):
+                        st.image(row["image_url"], width=150)
+                with col2:
+                    st.subheader(row["name"])
+                    st.write("**Cuisine :**", row["cuisine"])
+                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
+                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
+                    with st.expander("Voir tout"):
+                        st.write("**Description :**", row["description"])
+                        st.write("**Course :**", row["course"])
+                        st.write("**Diet :**", row["diet"])
+                        st.write("**Ingrédients :**", row["ingredients_name"])
+                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                        st.write("**Instructions :**", row["instructions"])
+                    if st.button(f"Ajouter aux favoris - cat_{i}", key=f"fav_cat_{i}"):
+                        add_to_favorites(row.to_dict())
 
 # Recherche avec filtres (difficulté, régime, etc.)
 def search_by_filters(df, difficulty, diet, meal, cuisine):
@@ -85,11 +116,22 @@ def search_by_filters(df, difficulty, diet, meal, cuisine):
         st.warning("Aucune recette trouvée avec ces filtres.")
     else:
         for i, (_, row) in enumerate(filtered_df.iterrows()):
-            st.subheader(row["name"])
-            st.write("**Cuisine :**", row["cuisine"])
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
-            st.write(row["description"])
-
-            if st.button(f"Ajouter aux favoris - filt_{i}", key=f"fav_filt_{i}"):
-                add_to_favorites(row.to_dict())
+            with st.container():
+                col1, col2 = st.columns([1, 3])
+                with col1:
+                    if pd.notna(row["image_url"]):
+                        st.image(row["image_url"], width=150)
+                with col2:
+                    st.subheader(row["name"])
+                    st.write("**Cuisine :**", row["cuisine"])
+                    st.write("**Temps de préparation :**", row["prep_time (in mins)"], " minutes")
+                    st.write("**Temps de cuisson :**", row["cook_time (in mins)"], " minutes")
+                    with st.expander("Voir tout"):
+                        st.write("**Description :**", row["description"])
+                        st.write("**Course :**", row["course"])
+                        st.write("**Diet :**", row["diet"])
+                        st.write("**Ingrédients :**", row["ingredients_name"])
+                        st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                        st.write("**Instructions :**", row["instructions"])
+                    if st.button(f"Ajouter aux favoris - filt_{i}", key=f"fav_filt_{i}"):
+                        add_to_favorites(row.to_dict())
