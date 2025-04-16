@@ -48,7 +48,7 @@ if st.sidebar.button("Appliquer les filtres"):
     search_by_filters(df, difficulty, diets, meal, cuisine)
 
 # Ajouter du style CSS personnalisé
-st.markdown("""
+st.markdown(""
     <style>
     .stButton>button {
         background-color: #FF6347;
