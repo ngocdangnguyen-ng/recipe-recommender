@@ -28,8 +28,11 @@ page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "Wha
 
 
 if page == "Accueil":
-
-    st.write("Bienvenue sur le Recommandateur de Recettes ! Utilisez la barre de navigation pour commencer.")
+    st.write("Bienvenue sur le Recommandateur de Recettes ! \U0001f60a")
+    st.markdown("## Here's some food I recommend you 👇")
+    random_recipes = df.sample(n=10, random_state=42)
+    for _, row in random_recipes.iterrows():
+        display_recipe(row)
 
 elif page == "Rechercher par nom":
 
