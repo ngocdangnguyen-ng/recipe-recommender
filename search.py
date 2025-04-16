@@ -98,10 +98,3 @@ def display_recipe(row):
             if st.button("Ajouter aux favoris", key=row["name"]):
                 st.session_state.favorites.append(row.to_dict())
                 st.success("Ajouté aux favoris !")
-
-# Exemple d'utilisation
-if st.sidebar.button("Voir mes favoris"):
-    display_favorites()
-else:
-    # Appel de vos fonctions de recherche ici
-    pass
