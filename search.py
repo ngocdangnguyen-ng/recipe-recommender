@@ -66,23 +66,42 @@ def search_by_filters(df, difficulty=None, diets=None, meal=None, cuisine=None):
     else:
         st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
 
+
+from favorites_page import display_favorites
+
+# Initialisation des favoris
+if "favorites" not in st.session_state:
+    st.session_state.favorites = []
+
+# Vos fonctions de recherche ici...
+
 def display_recipe(row):
-    with st.container():
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            if pd.notna(row["image_url"]):
-                st.image(row["image_url"], width=150)
-        with col2:
-            st.subheader(row["name"])
-            st.write("**Cuisine :**", row["cuisine"])
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
-            with st.expander("Voir tout"):
-                st.write("**Description :**", row["description"])
-                st.write("**Course :**", row["course"])
-                st.write("**Diet :**", row["diet"])
-                st.write("**Ingrédients :**", row["ingredients_name"])
-                st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                st.write("**Instructions :**", row["instructions"])
-                if pd.notna(row["image_url"]):
-                    st.image(row["image_url"], caption=row["name"], width=300)
+    with st.container():
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            if pd.notna(row["image_url"]):
+                st.image(row["image_url"], width=150)
+        with col2:
+            st.subheader(row["name"])
+            st.write("**Cuisine :**", row["cuisine"])
+            st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
+            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
+            with st.expander("Voir tout"):
+                st.write("**Description :**", row["description"])
+                st.write("**Course :**", row["course"])
+                st.write("**Diet :**", row["diet"])
+                st.write("**Ingrédients :**", row["ingredients_name"])
+                st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
+                st.write("**Instructions :**", row["instructions"])
+                if pd.notna(row["image_url"]):
+                    st.image(row["image_url"], caption=row["name"], width=300)
+            if st.button("Ajouter aux favoris", key=row["name"]):
+                st.session_state.favorites.append(row.to_dict())
+                st.success("Ajouté aux favoris !")
+
+# Exemple d'utilisation
+if st.sidebar.button("Voir mes favoris"):
+    display_favorites()
+else:
+    # Appel de vos fonctions de recherche ici
+    pass
