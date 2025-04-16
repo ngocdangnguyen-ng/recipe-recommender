@@ -95,6 +95,6 @@ def display_recipe(row):
                 st.write("**Instructions :**", row["instructions"])
                 if pd.notna(row["image_url"]):
                     st.image(row["image_url"], caption=row["name"], width=300)
-            if st.button("Ajouter aux favoris", key=row["name"]):
+            if st.button("Ajouter aux favoris", key=f"{row['name']}_{row.name}"):
                 st.session_state.favorites.append(row.to_dict())
                 st.success("Ajouté aux favoris !")
