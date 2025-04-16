@@ -40,6 +40,10 @@ if page == "Accueil":
             except Exception as e:
                 st.image("https://via.placeholder.com/300", caption="Image non dispo")
                 st.write(f"Erreur : {e}")
+            # Display the name of the dish and total time
+            st.write(f"**{row['name']}**")
+            total_time = row['prep_time'] + row['cook_time']
+            st.write(f"Temps total: {total_time} minutes")
 
 elif page == "Rechercher par nom":
     st.header("Rechercher par nom")
