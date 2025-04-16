@@ -3,6 +3,10 @@ import pandas as pd
 from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters
 from favorites_page import display_favorites
 
+# 👇 Initialisation ici, AVANT tout
+if "favorites" not in st.session_state:
+    st.session_state.favorites = []
+
 # Charger les données dès l'ouverture du site
 @st.cache_data
 def load_data():
