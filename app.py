@@ -48,7 +48,7 @@ if st.sidebar.button("Appliquer les filtres"):
     search_by_filters(df, difficulty, diets, meal, cuisine)
 
 # Ajouter du style CSS personnalisé
-st.markdown(""
+st.markdown("""
     <style>
     .stButton>button {
         background-color: #FF6347;
@@ -57,4 +57,30 @@ st.markdown(""
         padding: 10px 20px;
         text-align: center;
         text-decoration: none;
-       
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .stTextInput>div>div>input {
+        border: 2px solid #FF6347;
+        border-radius: 8px;
+        padding: 10px;
+    }
+    .stRadio>div>div>div>label {
+        background-color: #FF6347;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
