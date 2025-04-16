@@ -5,34 +5,32 @@ import pandas as pd
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
 
-def display_recipe(row):
+def display_favorites():
+    st.title("Mes recettes favorites")
+
+    if st.session_state.favorites:
+        for fav in st.session_state.favorites:
+            display_favorite_recipe(fav)
+    else:
+        st.info("Vous n'avez pas encore ajouté de recettes aux favoris.")
+
+def display_favorite_recipe(recipe):
     with st.container():
         col1, col2 = st.columns([1, 3])
         with col1:
-            if pd.notna(row["image_url"]):
-                st.image(row["image_url"], width=150)
+            if pd.notna(recipe["image_url"]):
+                st.image(recipe["image_url"], width=150)
         with col2:
-            st.subheader(row["name"])
-            st.write("**Cuisine :**", row["cuisine"])
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
+            st.subheader(recipe["name"])
+            st.write("**Cuisine :**", recipe["cuisine"])
+            st.write("**Temps de préparation :**", recipe["prep_time (in mins)"], "minutes")
+            st.write("**Temps de cuisson :**", recipe["cook_time (in mins)"], "minutes")
             with st.expander("Voir tout"):
-                st.write("**Description :**", row["description"])
-                st.write("**Course :**", row["course"])
-                st.write("**Diet :**", row["diet"])
-                st.write("**Ingrédients :**", row["ingredients_name"])
-                st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-                st.write("**Instructions :**", row["instructions"])
-                if pd.notna(row["image_url"]):
-                    st.image(row["image_url"], caption=row["name"], width=300)
-
-def display_favorites():
-    st.write("## Mes favoris")
-    if st.session_state.favorites:
-        for favorite in st.session_state.favorites:
-            display_recipe(pd.Series(favorite))
-    else:
-        st.info("Aucune recette favorite pour le moment.")
-
-# Affichage de la page des favoris
-display_favorites()
+                st.write("**Description :**", recipe["description"])
+                st.write("**Course :**", recipe["course"])
+                st.write("**Diet :**", recipe["diet"])
+                st.write("**Ingrédients :**", recipe["ingredients_name"])
+                st.write("**Quantité des ingrédients :**", recipe["ingredients_quantity"])
+                st.write("**Instructions :**", recipe["instructions"])
+                if pd.notna(recipe["image_url"]):
+                    st.image(recipe["image_url"], caption=recipe["name"], width=300)
