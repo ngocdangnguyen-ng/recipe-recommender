@@ -3,7 +3,6 @@ import pandas as pd
 import requests
 from PIL import Image
 from io import BytesIO
-
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from recommender import RecipeRecommender
@@ -20,16 +19,16 @@ df = load_data()
 recommender = RecipeRecommender(df)
 
 # Barre de navigation
-page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Recommandations"])
+page = st.sidebar.selectbox("Navigation", ["Home", "Search by name", "What's in your kitchen?", "Recommandations"])
 
-if page == "Accueil":
-    st.header("👋 Bienvenue sur votre assistant recettes !")
-    st.write("Utilisez le menu à gauche pour rechercher ou obtenir des recommandations.")
+if page == "Home":
+    st.header("👋 Welcome to your recipe assistant !")
+    st.write("Use the menu on the left to search or get recommendations.")
 
-elif page == "Rechercher par nom":
-    st.header("Rechercher par nom")
-    recipe_name = st.text_input("Entrez un nom de recette :", "")
-    if st.button("Rechercher"):
+elif page == "Search by name":
+    st.header("Search by name")
+    recipe_name = st.text_input("Enter a recipe name :", "")
+    if st.button("Search"):
         search_by_name(df, recipe_name)
 
 elif page == "What's in your kitchen?":
@@ -42,20 +41,20 @@ elif page == "What's in your kitchen?":
 # app.py
 elif page == "Recommandations":
     st.header("Recommandations")
-    query = st.text_input("Entrez un nom de recette ou un mot-clé :")
+    query = st.text_input("Enter a recipe name or keyword :")
 
-    if st.button("Recommander"):
+    if st.button("Recommend"):
         if not query:
-            st.error("Veuillez entrer un mot-clé.")
+            st.error("Please enter a keyword.")
         else:
             # Étape 1 : Rechercher les plats contenant le mot
             mask = df["name"].str.contains(query, case=False, na=False)
             matching_recipes = df[mask]
 
             if matching_recipes.empty:
-                st.warning("Aucune recette trouvée contenant ce mot.")
+                st.warning("No recipes found containing this word.")
             else:
-                st.success(f"{len(matching_recipes)} recette(s) trouvée(s) contenant '{query}' :")
+                st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
                 for _, row in matching_recipes.iterrows():
                     display_recipe(row)
 
@@ -71,16 +70,16 @@ elif page == "Recommandations":
                 all_similar = all_similar.drop_duplicates(subset="name")
                 all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
             else:
-                st.error("La colonne 'name' est manquante dans les recettes similaires.")
+                st.error("The 'name' column is missing in similar recipes.")
 
            # Vérification correcte d'empty sur un DataFrame
             if not all_similar.empty:
                 st.markdown("---")
-                st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
+                st.subheader("📌 Recipes similar to what you searched for:")
                 for _, row in all_similar.head(10).iterrows():  # Affichage des 10 premières suggestions
                     display_recipe(row)
             else:
-                st.info("Aucune recette similaire à recommander.")
+                st.info("No similar recipe to recommend.")
 
 # Filtres
 st.sidebar.header("Filtres")
