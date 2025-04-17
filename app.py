@@ -40,6 +40,7 @@ elif page == "What's in your kitchen?":
         search_by_ingredients(df, ingredients)
 
 elif page == "Recommandations":
+    st.header("Recommandations")
     query = st.text_input("Entrez un nom de recette ou un mot-clé :")
 
     if st.button("Recommander"):
