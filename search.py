@@ -128,36 +128,31 @@ def display_recipe(row):
                 if pd.notna(row.get("image_url")):
                     st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
 
-def display_recommendations(results):
-    num_results = 9  # Nombre de résultats à afficher initialement
-    displayed_results = results.head(num_results)
+def display_recommendations(recommendations):
+    for _, recipe in recommendations.iterrows():
+        st.markdown("---")
+        st.subheader(recipe["name"])
 
-    cols = st.columns(3)
-    for i, (_, row) in enumerate(displayed_results.iterrows()):
-        with cols[i % 3]:
-            with st.container():
-                image_url = row.get("image_url", "")
-                if image_url:
-                    try:
-                        # Tentative de récupération de l'image
-                        response = requests.get(image_url, timeout=5)
-                        response.raise_for_status()  # Vérifie que la réponse est réussie (status_code 200)
-                        image = Image.open(BytesIO(response.content)).resize((300, 300))
-                        st.image(image)
-                    except requests.exceptions.RequestException as e:
-                        # Si une erreur se produit, affiche une image par défaut et log l'erreur
-                        st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                        st.error(f"Erreur lors du chargement de l'image pour {row['name']} : {e}")
-                else:
-                    st.image("https://via.placeholder.com/300", caption="Image non dispo")
+        # Affichage de l'image
+        try:
+            response = requests.get(recipe["image_url"], timeout=5)
+            if response.status_code == 200:
+                image = Image.open(BytesIO(response.content)).resize((300, 300))
+                st.image(image)
+            else:
+                st.image("https://via.placeholder.com/300", caption="Image non dispo")
+        except requests.exceptions.RequestException:
+            st.image("https://via.placeholder.com/300", caption="Image non dispo")
 
-                st.markdown(f"**{row['name']}**")
-                total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
-                st.markdown(f"🕒 {total_time} minutes")
-                if st.button(f"Voir tout - {row['name']}", key=f"btn_{row['name']}"):
-                    st.write(f"### {row['name']}")
-                    st.write(f"**Cuisine**: {row['cuisine']}")
-                    st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
-                    st.write(f"**Temps de cuisson**: {row['cook_time (in mins)']} minutes")
-                    st.write(f"**Ingrédients**: {row['ingredients_name']}")
-                    st.write(f"**Description**: {row['description']}")
+        # Infos rapides
+        st.write(f"**Cuisine** : {recipe.get('cuisine', 'Inconnue')}")
+        st.write(f"**Temps de préparation** : {recipe.get('prep_time (in mins)', 'N/A')} minutes")
+        st.write(f"**Temps de cuisson** : {recipe.get('cook_time (in mins)', 'N/A')} minutes")
+
+        # Détails repliés
+        with st.expander("Voir tout"):
+            st.markdown(f"**Description** : {recipe.get('description', 'Pas de description')}")
+            st.markdown(f"**Course** : {recipe.get('course', 'N/A')}")
+            st.markdown(f"**Diet** : {recipe.get('diet', 'N/A')}")
+            st.markdown(f"**Ingrédients** : {recipe.get('ingredients_name', 'N/A')}")
+            st.markdown(f"**Quantité des ingrédients** : {recipe.get('ingredients_quantity', 'N/A')}")
