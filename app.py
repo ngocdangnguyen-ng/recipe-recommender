@@ -3,6 +3,9 @@ import pandas as pd
 import requests
 from PIL import Image
 from io import BytesIO
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from recommender import RecipeRecommender
 from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters, display_recipe, display_recommendations  # Import display_recipe
 
@@ -60,9 +63,6 @@ elif page == "Popular":
     category = st.selectbox("Choisissez une catégorie :", ["Easy Dinner", "Under 30 Minutes", "Chicken", "Breakfast", "Desserts"])
     if st.button("Rechercher"):
         search_by_category(df, category)
-
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 
 elif page == "Recommandations":
     st.title("🔍 Recommandation de recettes similaires")
