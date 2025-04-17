@@ -146,7 +146,7 @@ def display_recommendations(results):
             st.markdown(f"**{row['name']}**")
             total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
             st.markdown(f"🕒 {total_time} minutes")
-            if st.button(f"Voir tout - {row['name']}"):
+            if st.button(f"Voir tout - {row['name']}", key=f"btn_{row['name']}"):
                 st.write(f"### {row['name']}")
                 st.write(f"**Cuisine**: {row['cuisine']}")
                 st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
@@ -155,7 +155,7 @@ def display_recommendations(results):
                 st.write(f"**Description**: {row['description']}")
 
     if len(results) > num_results:
-        if st.button("Voir plus de résultats"):
+        if st.button("Voir plus de résultats", key="btn_more_results"):
             st.write("### Toutes les recommandations")
             for i, (_, row) in enumerate(results.iterrows()):
                 with cols[i % 3]:
@@ -171,10 +171,11 @@ def display_recommendations(results):
                     st.markdown(f"**{row['name']}**")
                     total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
                     st.markdown(f"🕒 {total_time} minutes")
-                    if st.button(f"Voir tout"):
+                    if st.button(f"Voir tout - {row['name']}", key=f"btn_{row['name']}_more"):
                         st.write(f"### {row['name']}")
                         st.write(f"**Cuisine**: {row['cuisine']}")
                         st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
                         st.write(f"**Temps de cuisson**: {row['cook_time (in mins)']} minutes")
                         st.write(f"**Ingrédients**: {row['ingredients_name']}")
                         st.write(f"**Description**: {row['description']}")
+
