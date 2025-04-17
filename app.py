@@ -64,13 +64,12 @@ elif page == "Popular":
 if st.button("Recommander"):
     if selected_recipe:
         results = recommender.get_similar_recipes(selected_recipe)
-        full_results = df[df["name"] == selected_recipe].reset_index(drop=True)
 
-        if full_results.empty:
+        if results.empty:
             st.warning("Aucune recommandation trouvée.")
         else:
             st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
-            display_recommendations(full_results)
+            display_recommendations(results)
     else:
         st.error("Veuillez sélectionner une recette avant de recommander.")
 
