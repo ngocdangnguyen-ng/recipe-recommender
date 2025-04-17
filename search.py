@@ -135,15 +135,20 @@ def display_recommendations(results):
     for i, (_, row) in enumerate(displayed_results.iterrows()):
         with cols[i % 3]:
             with st.container():
-                try:
-                    response = requests.get(row["image_url"], timeout=5)
-                    if response.status_code == 200:
-                        image = Image.open(BytesIO(response.content)).resize((300, 300))
-                        st.image(image)
-                    else:
+                image_url = row.get("image_url", "")
+                if image_url:
+                    try:
+                        response = requests.get(image_url, timeout=5)
+                        if response.status_code == 200:
+                            image = Image.open(BytesIO(response.content)).resize((300, 300))
+                            st.image(image)
+                        else:
+                            st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                    except requests.exceptions.RequestException:
                         st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                except:
+                else:
                     st.image("https://via.placeholder.com/300", caption="Image non dispo")
+
                 st.markdown(f"**{row['name']}**")
                 total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
                 st.markdown(f"🕒 {total_time} minutes")
@@ -154,30 +159,3 @@ def display_recommendations(results):
                     st.write(f"**Temps de cuisson**: {row['cook_time (in mins)']} minutes")
                     st.write(f"**Ingrédients**: {row['ingredients_name']}")
                     st.write(f"**Description**: {row['description']}")
-
-    if len(results) > num_results:
-        if st.button("Voir plus de résultats", key="btn_more_results"):
-            st.write("### Toutes les recommandations")
-            for i, (_, row) in enumerate(results.iterrows()):
-                with cols[i % 3]:
-                    with st.container():
-                        try:
-                            response = requests.get(row["image_url"], timeout=5)
-                            if response.status_code == 200:
-                                image = Image.open(BytesIO(response.content)).resize((300, 300))
-                                st.image(image)
-                            else:
-                                st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                        except:
-                            st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                        st.markdown(f"**{row['name']}**")
-                        total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
-                        st.markdown(f"🕒 {total_time} minutes")
-                        if st.button(f"Voir tout - {row['name']}", key=f"btn_{row['name']}_more"):
-                            st.write(f"### {row['name']}")
-                            st.write(f"**Cuisine**: {row['cuisine']}")
-                            st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
-                            st.write(f"**Temps de cuisson**: {row['cook_time (in mins)']} minutes")
-                            st.write(f"**Ingrédients**: {row['ingredients_name']}")
-                            st.write(f"**Description**: {row['description']}")
-
