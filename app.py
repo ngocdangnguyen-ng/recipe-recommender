@@ -39,6 +39,7 @@ elif page == "What's in your kitchen?":
     if st.button("Find recipes"):
         search_by_ingredients(df, ingredients)
 
+# app.py
 elif page == "Recommandations":
     st.header("Recommandations")
     query = st.text_input("Entrez un nom de recette ou un mot-clé :")
@@ -75,7 +76,8 @@ elif page == "Recommandations":
             if not all_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
-                display_recipe(all_similar.head(10))  # Top 10 suggestions
+                for _, row in all_similar.head(10).iterrows():  # Affichage des 10 premières suggestions
+                    display_recipe(row)
             else:
                 st.info("Aucune recette similaire à recommander.")
 
