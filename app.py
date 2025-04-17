@@ -3,27 +3,27 @@ import pandas as pd
 import requests
 from PIL import Image
 from io import BytesIO
-from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters, display_recipe
+from recommender import RecipeRecommender
+from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters
 
-# Charger les données dès l'ouverture du site
+# Chargement des données
 @st.cache_data
 def load_data():
     df = pd.read_csv("Food_Recipe_cleaned.csv")
-    df = df.dropna(subset=["image_url"])
+    df = df.dropna(subset=["image_url", "ingredients_name", "name"])
     return df
 
-# Load data
 df = load_data()
+recommender = RecipeRecommender(df)
 
-# Interface utilisateur
+# Titre principal
 st.title("🍽️ Recommandateur de Recettes")
 
 # Barre de navigation
-page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Popular"])
+page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Popular", "Recommandations"])
 
 if page == "Accueil":
     st.subheader("🔥 Here's some food I recommend you")
-
     random_recipes = df.sample(9)
 
     cols = st.columns(3)
@@ -36,13 +36,10 @@ if page == "Accueil":
                     st.image(image)
                 else:
                     st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                    st.write(f"Erreur {response.status_code} pour {row['image_url']}")
-            except Exception as e:
+            except:
                 st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                st.write(f"Erreur : {e}")
-            # Display the name of the dish and total time
             st.write(f"**{row['name']}**")
-            total_time = row['prep_time (in mins)'] + row['cook_time (in mins)']
+            total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
             st.write(f"Temps total: {total_time} minutes")
 
 elif page == "Rechercher par nom":
@@ -64,7 +61,33 @@ elif page == "Popular":
     if st.button("Rechercher"):
         search_by_category(df, category)
 
-# Ajouter des boutons pour les filtres
+elif page == "Recommandations":
+    st.title("🔍 Recommandation de recettes similaires")
+    selected_recipe = st.selectbox("Choisissez une recette :", df["name"].unique())
+
+    if st.button("Recommander"):
+        results = recommender.get_similar_recipes(selected_recipe)
+        if results.empty:
+            st.warning("Aucune recommandation trouvée.")
+        else:
+            st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
+            cols = st.columns(3)
+            for i, (_, row) in enumerate(results.iterrows()):
+                with cols[i % 3]:
+                    try:
+                        response = requests.get(row["image_url"], timeout=5)
+                        if response.status_code == 200:
+                            image = Image.open(BytesIO(response.content)).resize((300, 300))
+                            st.image(image)
+                        else:
+                            st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                    except:
+                        st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                    st.markdown(f"**{row['name']}**")
+                    total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
+                    st.markdown(f"🕒 {total_time} minutes")
+
+# Filtres
 st.sidebar.header("Filtres")
 difficulty = st.sidebar.radio("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
 diets = st.sidebar.radio("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
@@ -73,8 +96,7 @@ cuisine = st.sidebar.radio("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chine
 if st.sidebar.button("Appliquer les filtres"):
     search_by_filters(df, difficulty, diets, meal, cuisine)
 
-
-# Ajouter du style CSS personnalisé
+# Style CSS personnalisé
 st.markdown("""
     <style>
     .stButton>button {
