@@ -73,36 +73,34 @@ elif page == "Recommandations":
         if not query:
             st.error("Veuillez entrer un mot-clé.")
         else:
-            # Étape 1 : Recherche des noms contenant le mot
+            # Étape 1 : Rechercher les plats contenant le mot
             mask = df["name"].str.contains(query, case=False, na=False)
-            filtered_df = df[mask]
+            matching_recipes = df[mask]
 
-            if filtered_df.empty:
-                st.warning("Aucune recette ne correspond directement à votre mot-clé. Voici les recettes les plus proches :")
-
-                # Étape 1 bis : fallback — recherche par similarité (CountVectorizer)
-                vectorizer = CountVectorizer().fit(df["name"].astype(str))
-                input_vec = vectorizer.transform([query])
-                name_vectors = vectorizer.transform(df["name"].astype(str))
-                similarities = cosine_similarity(input_vec, name_vectors).flatten()
-
-                top_indices = similarities.argsort()[::-1]
-                filtered_df = df.iloc[top_indices[:5]]  # top 5 recettes les plus proches
-                filtered_df = filtered_df[similarities[top_indices[:5]] > 0]
-
-            if filtered_df.empty:
-                st.error("Aucune recette similaire trouvée.")
+            if matching_recipes.empty:
+                st.warning("Aucune recette trouvée contenant ce mot.")
             else:
-                for i, (_, row) in enumerate(filtered_df.iterrows()):
-                    st.markdown(f"### 🍽️ Résultat #{i+1} : {row['name']}")
+                st.success(f"{len(matching_recipes)} recette(s) trouvée(s) contenant '{query}' :")
+                for _, row in matching_recipes.iterrows():
                     display_recipe(row)
 
-                    # Étape 2 : Recommandations similaires à cette recette
-                    similar = recommender.get_similar_recipes(row['name'])
+            # Étape 2 : Recommandations basées sur les recettes trouvées
+            all_similar = pd.DataFrame()
 
-                    if not similar.empty:
-                        st.info(f"Recettes similaires à **{row['name']}** :")
-                        display_recommendations(similar.head(3))  # Top 3 pour ne pas surcharger
+            for _, row in matching_recipes.iterrows():
+                similar = recommender.get_similar_recipes(row["name"])
+                all_similar = pd.concat([all_similar, similar])
+
+            # Enlever les doublons et les recettes déjà affichées
+            all_similar = all_similar.drop_duplicates(subset="name")
+            all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+
+            if not all_similar.empty:
+                st.markdown("---")
+                st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
+                display_recommendations(all_similar.head(5))  # Top 5 suggestions
+            else:
+                st.info("Aucune recette similaire à recommander.")
 
 # Filtres
 st.sidebar.header("Filtres")
