@@ -138,14 +138,15 @@ def display_recommendations(results):
                 image_url = row.get("image_url", "")
                 if image_url:
                     try:
+                        # Tentative de récupération de l'image
                         response = requests.get(image_url, timeout=5)
-                        if response.status_code == 200:
-                            image = Image.open(BytesIO(response.content)).resize((300, 300))
-                            st.image(image)
-                        else:
-                            st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                    except requests.exceptions.RequestException:
+                        response.raise_for_status()  # Vérifie que la réponse est réussie (status_code 200)
+                        image = Image.open(BytesIO(response.content)).resize((300, 300))
+                        st.image(image)
+                    except requests.exceptions.RequestException as e:
+                        # Si une erreur se produit, affiche une image par défaut et log l'erreur
                         st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                        st.error(f"Erreur lors du chargement de l'image : {e}")
                 else:
                     st.image("https://via.placeholder.com/300", caption="Image non dispo")
 
