@@ -102,36 +102,3 @@ def display_recipe(row):
                 st.write("**Instructions :**", row.get("instructions", "Non spécifié"))
                 if pd.notna(row.get("image_url")):
                     st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
-
-def display_recommendations(recommendations):
-    for _, recipe in recommendations.iterrows():
-        with st.container():
-            col1, col2 = st.columns([1, 3])
-
-            with col1:
-                try:
-                    if pd.notna(recipe.get("image_url")):
-                        response = requests.get(recipe["image_url"], timeout=5)
-                        if response.status_code == 200:
-                            image = Image.open(BytesIO(response.content)).resize((300, 300))
-                            st.image(image)
-                        else:
-                            st.image("https://via.placeholder.com/300", caption="Image non dispo", width=300)
-                    else:
-                        st.image("https://via.placeholder.com/300", caption="Image non dispo", width=300)
-                except requests.exceptions.RequestException:
-                    st.image("https://via.placeholder.com/300", caption="Image non dispo", width=300)
-
-            with col2:
-                st.subheader(recipe.get("name", "Nom non disponible"))
-                st.write("**Cuisine :**", recipe.get("cuisine", "Non spécifié"))
-                st.write("**Temps de préparation :**", recipe.get("prep_time (in mins)", "Non spécifié"), "minutes")
-                st.write("**Temps de cuisson :**", recipe.get("cook_time (in mins)", "Non spécifié"), "minutes")
-
-                with st.expander("Voir tout"):
-                    st.write("**Description :**", recipe.get("description", "Non spécifié"))
-                    st.write("**Course :**", recipe.get("course", "Non spécifié"))
-                    st.write("**Diet :**", recipe.get("diet", "Non spécifié"))
-                    st.write("**Ingrédients :**", recipe.get("ingredients_name", "Non spécifié"))
-                    st.write("**Quantité des ingrédients :**", recipe.get("ingredients_quantity", "Non spécifié"))
-                    st.write("**Instructions :**", recipe.get("instructions", "Non spécifié"))
