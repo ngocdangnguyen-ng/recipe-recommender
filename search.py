@@ -1,5 +1,5 @@
 import streamlit as st
-
+import requests
 import pandas as pd  # Assurez-vous que pandas est importé
 
 
