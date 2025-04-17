@@ -7,13 +7,13 @@ from io import BytesIO
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from recommender import RecipeRecommender
-from search import search_by_name, search_by_ingredients, search_by_filters, display_recipe, display_recommendations  # Import display_recipe
+from search import search_by_name, search_by_ingredients, search_by_filters, display_recipe, display_recommendations
 
 # Chargement des données
 @st.cache_data
 def load_data():
     df = pd.read_csv("Food_Recipe_cleaned.csv")
-    df = df.dropna(subset=["image_url", "ingredients_name", "name"])
+    df = df.dropna(subset=["image_url", "ingredients_name", "name"])  # On s'assure que les colonnes essentielles ne contiennent pas de valeurs manquantes
     return df
 
 df = load_data()
@@ -66,13 +66,16 @@ elif page == "Recommandations":
                 all_similar = pd.concat([all_similar, similar])
 
             # Enlever les doublons et les recettes déjà affichées
-            all_similar = all_similar.drop_duplicates(subset="name")
-            all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+            if "name" in all_similar.columns:
+                all_similar = all_similar.drop_duplicates(subset="name")
+                all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+            else:
+                st.error("La colonne 'name' est manquante dans les recettes similaires.")
 
             if not all_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
-                display_recommendations(all_similar.head(10))  # Top 5 suggestions
+                display_recommendations(all_similar.head(10))  # Top 10 suggestions
             else:
                 st.info("Aucune recette similaire à recommander.")
 
