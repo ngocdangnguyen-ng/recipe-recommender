@@ -67,41 +67,42 @@ elif page == "Popular":
 elif page == "Recommandations":
     st.title("🔍 Recommandation de recettes similaires")
 
-    selected_input = st.text_input("Entrez un nom de recette, un ingrédient ou un mot-clé :")
+    query = st.text_input("Entrez un nom de recette ou un mot-clé :")
 
     if st.button("Recommander"):
-
-        if not selected_input:
+        if not query:
             st.error("Veuillez entrer un mot-clé.")
         else:
-            # Préparation pour la recherche
-            vectorizer = CountVectorizer().fit_transform(df["name"].astype(str))
-            input_vec = CountVectorizer().fit(df["name"].astype(str)).transform([selected_input])
-            similarity_scores = cosine_similarity(input_vec, vectorizer).flatten()
+            # Étape 1 : Recherche des noms contenant le mot
+            mask = df["name"].str.contains(query, case=False, na=False)
+            filtered_df = df[mask]
 
-            # Top résultats (triés)
-            top_indices = similarity_scores.argsort()[::-1]
-            top_matches = df.iloc[top_indices].reset_index(drop=True)
-            top_matches = top_matches[similarity_scores[top_indices] > 0]  # on filtre les scores nuls
+            if filtered_df.empty:
+                st.warning("Aucune recette ne correspond directement à votre mot-clé. Voici les recettes les plus proches :")
 
-            if top_matches.empty:
-                st.warning("Aucune recette similaire trouvée.")
+                # Étape 1 bis : fallback — recherche par similarité (CountVectorizer)
+                vectorizer = CountVectorizer().fit(df["name"].astype(str))
+                input_vec = vectorizer.transform([query])
+                name_vectors = vectorizer.transform(df["name"].astype(str))
+                similarities = cosine_similarity(input_vec, name_vectors).flatten()
+
+                top_indices = similarities.argsort()[::-1]
+                filtered_df = df.iloc[top_indices[:5]]  # top 5 recettes les plus proches
+                filtered_df = filtered_df[similarities[top_indices[:5]] > 0]
+
+            if filtered_df.empty:
+                st.error("Aucune recette similaire trouvée.")
             else:
-                # Recette la plus proche
-                selected_recipe_row = top_matches.iloc[0]
-                selected_recipe_name = selected_recipe_row["name"]
+                for i, (_, row) in enumerate(filtered_df.iterrows()):
+                    st.markdown(f"### 🍽️ Résultat #{i+1} : {row['name']}")
+                    display_recipe(row)
 
-                st.subheader(f"🍽️ Recette la plus proche : **{selected_recipe_name}**")
-                display_recipe(selected_recipe_row)
+                    # Étape 2 : Recommandations similaires à cette recette
+                    similar = recommender.get_similar_recipes(row['name'])
 
-                # Recommandations similaires (sans la première)
-                similar_recipes = recommender.get_similar_recipes(selected_recipe_name)
-
-                if similar_recipes.empty:
-                    st.warning("Aucune recommandation trouvée.")
-                else:
-                    st.success(f"Voici des recettes similaires à **{selected_recipe_name}** :")
-                    display_recommendations(similar_recipes)
+                    if not similar.empty:
+                        st.info(f"Recettes similaires à **{row['name']}** :")
+                        display_recommendations(similar.head(3))  # Top 3 pour ne pas surcharger
 
 # Filtres
 st.sidebar.header("Filtres")
