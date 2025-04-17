@@ -62,16 +62,17 @@ elif page == "Popular":
         search_by_category(df, category)
 
 if st.button("Recommander"):
-    results = recommender.get_similar_recipes(selected_recipe)
+    if selected_recipe:
+        results = recommender.get_similar_recipes(selected_recipe)
+        full_results = df[df["name"] == selected_recipe].reset_index(drop=True)
 
-    # 🛠️ Merge pour récupérer toutes les colonnes complètes depuis df
-    full_results = df[df["name"].isin(results["name"])].reset_index(drop=True)
-
-    if full_results.empty:
-        st.warning("Aucune recommandation trouvée.")
+        if full_results.empty:
+            st.warning("Aucune recommandation trouvée.")
+        else:
+            st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
+            display_recommendations(full_results)
     else:
-        st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
-        display_recommendations(full_results)
+        st.error("Veuillez sélectionner une recette avant de recommander.")
 
 # Filtres
 st.sidebar.header("Filtres")
