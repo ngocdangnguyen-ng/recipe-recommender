@@ -98,7 +98,7 @@ elif page == "Recommandations":
             if not all_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
-                display_recommendations(all_similar.head(5))  # Top 5 suggestions
+                display_recommendations(all_similar.head(10))  # Top 5 suggestions
             else:
                 st.info("Aucune recette similaire à recommander.")
 
