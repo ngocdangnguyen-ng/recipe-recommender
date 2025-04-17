@@ -71,20 +71,7 @@ elif page == "Recommandations":
             st.warning("Aucune recommandation trouvée.")
         else:
             st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
-            num_results = 9  # Nombre de résultats à afficher initialement
-            displayed_results = results.head(num_results)
-
-            cols = st.columns(3)
-            for i, (_, row) in enumerate(displayed_results.iterrows()):
-                with cols[i % 3]:
-                    display_recipe(row)
-
-            if len(results) > num_results:
-                if st.button("Voir plus de résultats"):
-                    st.write("### Toutes les recommandations")
-                    for i, (_, row) in enumerate(results.iterrows()):
-                        with cols[i % 3]:
-                            display_recipe(row)
+            display_recommendations(results)
 
 # Filtres
 st.sidebar.header("Filtres")
