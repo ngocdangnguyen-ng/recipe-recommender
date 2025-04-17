@@ -146,7 +146,7 @@ def display_recommendations(results):
                     except requests.exceptions.RequestException as e:
                         # Si une erreur se produit, affiche une image par défaut et log l'erreur
                         st.image("https://via.placeholder.com/300", caption="Image non dispo")
-                        st.error(f"Erreur lors du chargement de l'image : {e}")
+                        st.error(f"Erreur lors du chargement de l'image pour {row['name']} : {e}")
                 else:
                     st.image("https://via.placeholder.com/300", caption="Image non dispo")
 
