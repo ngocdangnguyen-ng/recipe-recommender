@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 from recommender import RecipeRecommender
-from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters
+from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters, display_recipe  # Import display_recipe
 
 # Chargement des données
 @st.cache_data
@@ -85,7 +85,6 @@ elif page == "Recommandations":
                     for i, (_, row) in enumerate(results.iterrows()):
                         with cols[i % 3]:
                             display_recipe(row)
-
 
 # Filtres
 st.sidebar.header("Filtres")
