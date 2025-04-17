@@ -7,7 +7,7 @@ from io import BytesIO
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from recommender import RecipeRecommender
-from search import search_by_name, search_by_ingredients, search_by_category, search_by_filters, display_recipe, display_recommendations  # Import display_recipe
+from search import search_by_name, search_by_ingredients, search_by_filters, display_recipe, display_recommendations  # Import display_recipe
 
 # Chargement des données
 @st.cache_data
@@ -57,12 +57,6 @@ elif page == "What's in your kitchen?":
     ingredients = st.text_input("Enter up to 3 ingredients separated by commas:", "")
     if st.button("Find recipes"):
         search_by_ingredients(df, ingredients)
-
-elif page == "Popular":
-    st.header("Popular Recipes")
-    category = st.selectbox("Choisissez une catégorie :", ["Easy Dinner", "Under 30 Minutes", "Chicken", "Breakfast", "Desserts"])
-    if st.button("Rechercher"):
-        search_by_category(df, category)
 
 elif page == "Recommandations":
     query = st.text_input("Entrez un nom de recette ou un mot-clé :")
