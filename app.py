@@ -61,28 +61,47 @@ elif page == "Popular":
     if st.button("Rechercher"):
         search_by_category(df, category)
 
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 elif page == "Recommandations":
     st.title("🔍 Recommandation de recettes similaires")
-    selected_recipe = st.text_input("Entrez le nom d'une recette :")
+
+    selected_input = st.text_input("Entrez un nom de recette, un ingrédient ou un mot-clé :")
 
     if st.button("Recommander"):
-        if selected_recipe:
-            if selected_recipe in df["name"].values:
-                st.subheader("🍽️ Recette sélectionnée")
-                selected_row = df[df["name"] == selected_recipe].iloc[0]
-                display_recipe(selected_row)
 
-                results = recommender.get_similar_recipes(selected_recipe)
+        if not selected_input:
+            st.error("Veuillez entrer un mot-clé.")
+        else:
+            # Préparation pour la recherche
+            vectorizer = CountVectorizer().fit_transform(df["name"].astype(str))
+            input_vec = CountVectorizer().fit(df["name"].astype(str)).transform([selected_input])
+            similarity_scores = cosine_similarity(input_vec, vectorizer).flatten()
 
-                if results.empty:
+            # Top résultats (triés)
+            top_indices = similarity_scores.argsort()[::-1]
+            top_matches = df.iloc[top_indices].reset_index(drop=True)
+            top_matches = top_matches[similarity_scores[top_indices] > 0]  # on filtre les scores nuls
+
+            if top_matches.empty:
+                st.warning("Aucune recette similaire trouvée.")
+            else:
+                # Recette la plus proche
+                selected_recipe_row = top_matches.iloc[0]
+                selected_recipe_name = selected_recipe_row["name"]
+
+                st.subheader(f"🍽️ Recette la plus proche : **{selected_recipe_name}**")
+                display_recipe(selected_recipe_row)
+
+                # Recommandations similaires (sans la première)
+                similar_recipes = recommender.get_similar_recipes(selected_recipe_name)
+
+                if similar_recipes.empty:
                     st.warning("Aucune recommandation trouvée.")
                 else:
-                    st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
-                    display_recommendations(results)
-            else:
-                st.error("Recette non trouvée dans la base.")
-        else:
-            st.error("Veuillez entrer un nom de recette.")
+                    st.success(f"Voici des recettes similaires à **{selected_recipe_name}** :")
+                    display_recommendations(similar_recipes)
 
 # Filtres
 st.sidebar.header("Filtres")
