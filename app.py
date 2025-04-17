@@ -63,6 +63,10 @@ elif page == "Popular":
 
 if st.button("Recommander"):
     if selected_recipe:
+        st.subheader("🍽️ Recette sélectionnée")
+        selected_row = df[df["name"] == selected_recipe].iloc[0]
+        display_recipe(selected_row)
+
         results = recommender.get_similar_recipes(selected_recipe)
 
         if results.empty:
