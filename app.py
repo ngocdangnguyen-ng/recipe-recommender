@@ -65,8 +65,6 @@ elif page == "Popular":
         search_by_category(df, category)
 
 elif page == "Recommandations":
-    st.title("🔍 Recommandation de recettes similaires")
-
     query = st.text_input("Entrez un nom de recette ou un mot-clé :")
 
     if st.button("Recommander"):
