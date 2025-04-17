@@ -7,7 +7,7 @@ from io import BytesIO
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from recommender import RecipeRecommender
-from search import search_by_name, search_by_ingredients, search_by_filters, display_recipe, display_recommendations
+from search import search_by_name, search_by_ingredients, search_by_filters, display_recipe
 
 # Chargement des données
 @st.cache_data
@@ -75,7 +75,7 @@ elif page == "Recommandations":
             if not all_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
-                display_recommendations(all_similar.head(10))  # Top 10 suggestions
+                display_recipe(all_similar.head(10))  # Top 10 suggestions
             else:
                 st.info("Aucune recette similaire à recommander.")
 
