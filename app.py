@@ -73,11 +73,11 @@ elif page == "Recommandations":
             else:
                 st.error("La colonne 'name' est manquante dans les recettes similaires.")
 
-            if not all_similar.empty:
+           if not all_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
-                  # Affichage des 10 premières suggestions
-                display_recipe(row)
+                for _, row in all_similar:  # Affichage des 10 premières suggestions
+                    display_recipe(row)
             else:
                 st.info("Aucune recette similaire à recommander.")
 
