@@ -19,9 +19,6 @@ def load_data():
 df = load_data()
 recommender = RecipeRecommender(df)
 
-# Titre principal
-st.title("🍽️ Recommandateur de Recettes")
-
 # Barre de navigation
 page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Recommandations"])
 
