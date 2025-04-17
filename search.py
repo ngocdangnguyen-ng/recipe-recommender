@@ -126,3 +126,55 @@ def display_recipe(row):
                 st.write("**Instructions :**", row.get("instructions", "Non spécifié"))
                 if pd.notna(row.get("image_url")):
                     st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
+
+def display_recommendations(results):
+    num_results = 9  # Nombre de résultats à afficher initialement
+    displayed_results = results.head(num_results)
+
+    cols = st.columns(3)
+    for i, (_, row) in enumerate(displayed_results.iterrows()):
+        with cols[i % 3]:
+            try:
+                response = requests.get(row["image_url"], timeout=5)
+                if response.status_code == 200:
+                    image = Image.open(BytesIO(response.content)).resize((300, 300))
+                    st.image(image)
+                else:
+                    st.image("https://via.placeholder.com/300", caption="Image non dispo")
+            except:
+                st.image("https://via.placeholder.com/300", caption="Image non dispo")
+            st.markdown(f"**{row['name']}**")
+            total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
+            st.markdown(f"🕒 {total_time} minutes")
+            if st.button(f"Voir tout - {row['name']}"):
+                st.write(f"### {row['name']}")
+                st.write(f"**Cuisine**: {row['cuisine']}")
+                st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
+                st.write(f"**Temps de cuisson**: {row['cook_time (in mins)']} minutes")
+                st.write(f"**Ingrédients**: {row['ingredients_name']}")
+                st.write(f"**Description**: {row['description']}")
+
+    if len(results) > num_results:
+        if st.button("Voir plus de résultats"):
+            st.write("### Toutes les recommandations")
+            for i, (_, row) in enumerate(results.iterrows()):
+                with cols[i % 3]:
+                    try:
+                        response = requests.get(row["image_url"], timeout=5)
+                        if response.status_code == 200:
+                            image = Image.open(BytesIO(response.content)).resize((300, 300))
+                            st.image(image)
+                        else:
+                            st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                    except:
+                        st.image("https://via.placeholder.com/300", caption="Image non dispo")
+                    st.markdown(f"**{row['name']}**")
+                    total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
+                    st.markdown(f"🕒 {total_time} minutes")
+                    if st.button(f"Voir tout - {row['name']}"):
+                        st.write(f"### {row['name']}")
+                        st.write(f"**Cuisine**: {row['cuisine']}")
+                        st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
+                        st.write(f"**Temps de cuisson**: {row['cook_time (in mins)']} minutes")
+                        st.write(f"**Ingrédients**: {row['ingredients_name']}")
+                        st.write(f"**Description**: {row['description']}")
