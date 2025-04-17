@@ -61,21 +61,28 @@ elif page == "Popular":
     if st.button("Rechercher"):
         search_by_category(df, category)
 
-if st.button("Recommander"):
-    if selected_recipe:
-        st.subheader("🍽️ Recette sélectionnée")
-        selected_row = df[df["name"] == selected_recipe].iloc[0]
-        display_recipe(selected_row)
+elif page == "Recommandations":
+    st.title("🔍 Recommandation de recettes similaires")
+    selected_recipe = st.text_input("Entrez le nom d'une recette :")
 
-        results = recommender.get_similar_recipes(selected_recipe)
+    if st.button("Recommander"):
+        if selected_recipe:
+            if selected_recipe in df["name"].values:
+                st.subheader("🍽️ Recette sélectionnée")
+                selected_row = df[df["name"] == selected_recipe].iloc[0]
+                display_recipe(selected_row)
 
-        if results.empty:
-            st.warning("Aucune recommandation trouvée.")
+                results = recommender.get_similar_recipes(selected_recipe)
+
+                if results.empty:
+                    st.warning("Aucune recommandation trouvée.")
+                else:
+                    st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
+                    display_recommendations(results)
+            else:
+                st.error("Recette non trouvée dans la base.")
         else:
-            st.success(f"Voici des recettes similaires à **{selected_recipe}** :")
-            display_recommendations(results)
-    else:
-        st.error("Veuillez sélectionner une recette avant de recommander.")
+            st.error("Veuillez entrer un nom de recette.")
 
 # Filtres
 st.sidebar.header("Filtres")
