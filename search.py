@@ -1,7 +1,8 @@
 import streamlit as st
+import pandas as pd
 import requests
-import pandas as pd  # Assurez-vous que pandas est importé
-
+from PIL import Image
+from io import BytesIO
 
 def search_by_name(df, recipe_name):
 
