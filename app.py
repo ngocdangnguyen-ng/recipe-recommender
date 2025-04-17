@@ -23,7 +23,7 @@ recommender = RecipeRecommender(df)
 st.title("🍽️ Recommandateur de Recettes")
 
 # Barre de navigation
-page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Popular", "Recommandations"])
+page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Recommandations"])
 
 if page == "Accueil":
     st.subheader("🔥 Here's some food I recommend you")
