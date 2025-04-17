@@ -171,7 +171,7 @@ def display_recommendations(results):
                     st.markdown(f"**{row['name']}**")
                     total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
                     st.markdown(f"🕒 {total_time} minutes")
-                    if st.button(f"Voir tout - {row['name']}"):
+                    if st.button(f"Voir tout"):
                         st.write(f"### {row['name']}")
                         st.write(f"**Cuisine**: {row['cuisine']}")
                         st.write(f"**Temps de préparation**: {row['prep_time (in mins)']} minutes")
