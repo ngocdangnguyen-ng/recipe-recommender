@@ -73,13 +73,15 @@ elif page == "Recommandations":
             else:
                 st.error("La colonne 'name' est manquante dans les recettes similaires.")
 
-           if not all_similar.empty():
+           # Vérification correcte d'empty sur un DataFrame
+            if not all_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Recettes similaires à ce que vous avez cherché :")
                 for _, row in all_similar.head(10).iterrows():  # Affichage des 10 premières suggestions
                     display_recipe(row)
             else:
                 st.info("Aucune recette similaire à recommander.")
+
 # Filtres
 st.sidebar.header("Filtres")
 difficulty = st.sidebar.radio("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
