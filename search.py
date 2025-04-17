@@ -151,8 +151,9 @@ def display_recommendations(recommendations):
 
         # Détails repliés
         with st.expander("Voir tout"):
-            st.markdown(f"**Description** : {recipe.get('description', 'Pas de description')}")
-            st.markdown(f"**Course** : {recipe.get('course', 'N/A')}")
-            st.markdown(f"**Diet** : {recipe.get('diet', 'N/A')}")
-            st.markdown(f"**Ingrédients** : {recipe.get('ingredients_name', 'N/A')}")
-            st.markdown(f"**Quantité des ingrédients** : {recipe.get('ingredients_quantity', 'N/A')}")
+                st.write("**Description :**", row.get("description", "Non spécifié"))
+                st.write("**Course :**", row.get("course", "Non spécifié"))
+                st.write("**Diet :**", row.get("diet", "Non spécifié"))
+                st.write("**Ingrédients :**", row.get("ingredients_name", "Non spécifié"))
+                st.write("**Quantité des ingrédients :**", row.get("ingredients_quantity", "Non spécifié"))
+                st.write("**Instructions :**", row.get("instructions", "Non spécifié"))
