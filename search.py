@@ -106,45 +106,23 @@ def search_by_filters(df, difficulty, diets, meal, cuisine):
     else:
         st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
 
-
-
-
 def display_recipe(row):
-
     with st.container():
-
         col1, col2 = st.columns([1, 3])
-
         with col1:
-
-            if pd.notna(row["image_url"]):
-
+            if pd.notna(row.get("image_url")):
                 st.image(row["image_url"], width=150)  # Taille de l'image ajustée
-
         with col2:
-
-            st.subheader(row["name"])
-
-            st.write("**Cuisine :**", row["cuisine"])
-
-            st.write("**Temps de préparation :**", row["prep_time (in mins)"], "minutes")
-
-            st.write("**Temps de cuisson :**", row["cook_time (in mins)"], "minutes")
-
+            st.subheader(row.get("name", "Nom non disponible"))
+            st.write("**Cuisine :**", row.get("cuisine", "Non spécifié"))
+            st.write("**Temps de préparation :**", row.get("prep_time (in mins)", "Non spécifié"), "minutes")
+            st.write("**Temps de cuisson :**", row.get("cook_time (in mins)", "Non spécifié"), "minutes")
             with st.expander("Voir tout"):
-
-                st.write("**Description :**", row["description"])
-
-                st.write("**Course :**", row["course"])
-
-                st.write("**Diet :**", row["diet"])
-
-                st.write("**Ingrédients :**", row["ingredients_name"])
-
-                st.write("**Quantité des ingrédients :**", row["ingredients_quantity"])
-
-                st.write("**Instructions :**", row["instructions"])
-
-                if pd.notna(row["image_url"]):
-
-                    st.image(row["image_url"], caption=row["name"], width=300)  # Taille de l'image ajustée
+                st.write("**Description :**", row.get("description", "Non spécifié"))
+                st.write("**Course :**", row.get("course", "Non spécifié"))
+                st.write("**Diet :**", row.get("diet", "Non spécifié"))
+                st.write("**Ingrédients :**", row.get("ingredients_name", "Non spécifié"))
+                st.write("**Quantité des ingrédients :**", row.get("ingredients_quantity", "Non spécifié"))
+                st.write("**Instructions :**", row.get("instructions", "Non spécifié"))
+                if pd.notna(row.get("image_url")):
+                    st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
