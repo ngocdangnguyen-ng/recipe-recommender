@@ -87,7 +87,10 @@ def display_recipe(row):
         col1, col2 = st.columns([1, 3])
         with col1:
             if pd.notna(row.get("image_url")):
-                st.image(row["image_url"], width=150)  # Taille de l'image ajustée
+                try:
+                    st.image(row["image_url"], width=150)  # Taille de l'image ajustée
+                except Exception as e:
+                    st.error(f"Erreur lors du chargement de l'image : {str(e)}")
         with col2:
             st.subheader(row.get("name", "Nom non disponible"))
             st.write("**Cuisine :**", row.get("cuisine", "Non spécifié"))
@@ -101,4 +104,8 @@ def display_recipe(row):
                 st.write("**Quantité des ingrédients :**", row.get("ingredients_quantity", "Non spécifié"))
                 st.write("**Instructions :**", row.get("instructions", "Non spécifié"))
                 if pd.notna(row.get("image_url")):
-                    st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
+                    try:
+                        st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
+                    except Exception as e:
+                        st.error(f"Erreur lors du chargement de l'image : {str(e)}")
+
