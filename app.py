@@ -26,24 +26,8 @@ st.title("🍽️ Recommandateur de Recettes")
 page = st.sidebar.selectbox("Navigation", ["Accueil", "Rechercher par nom", "What's in your kitchen?", "Recommandations"])
 
 if page == "Accueil":
-    st.subheader("🔥 Here's some food I recommend you")
-    random_recipes = df.sample(9)
-
-    cols = st.columns(3)
-    for i, (idx, row) in enumerate(random_recipes.iterrows()):
-        with cols[i % 3]:
-            try:
-                response = requests.get(row["image_url"], timeout=5)
-                if response.status_code == 200:
-                    image = Image.open(BytesIO(response.content)).resize((300, 300))
-                    st.image(image)
-                else:
-                    st.image("https://via.placeholder.com/300", caption="Image non dispo")
-            except:
-                st.image("https://via.placeholder.com/300", caption="Image non dispo")
-            st.write(f"**{row['name']}**")
-            total_time = int(row['prep_time (in mins)']) + int(row['cook_time (in mins)'])
-            st.write(f"Temps total: {total_time} minutes")
+    st.header("👋 Bienvenue sur votre assistant recettes !")
+    st.write("Utilisez le menu à gauche pour rechercher ou obtenir des recommandations.")
 
 elif page == "Rechercher par nom":
     st.header("Rechercher par nom")
