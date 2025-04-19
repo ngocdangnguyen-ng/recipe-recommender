@@ -27,10 +27,34 @@ if page == "Home":
 
 elif page == "What's in your kitchen?":
     st.header("What's in your kitchen?")
-    st.write("Find recipes based on what you already have at home!")
     ingredients = st.text_input("Enter up to 3 ingredients separated by commas:", "")
+
     if st.button("Find recipes"):
-        search_by_ingredients(df, ingredients)
+        ingredient_list = [i.strip().lower() for i in ingredients.split(',') if i.strip()]
+        filtered_recipes = df[df['ingredients_name'].apply(lambda x: all(ing in x.lower() for ing in ingredient_list))]
+
+        if filtered_recipes.empty:
+            st.warning("Aucune recette trouvée avec ces ingrédients !")
+        else:
+            st.success(f"{len(filtered_recipes)} recette(s) trouvée(s)")
+
+            # Filtres supplémentaires (appliqués après la recherche initiale)
+            st.subheader("🔍 Affiner les résultats :")
+            col1, col2 = st.columns(2)
+            with col1:
+                difficulty = st.selectbox("Temps de préparation", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
+                diets = st.selectbox("Type de régime", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
+            with col2:
+                meal = st.selectbox("Type de plat", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"])
+                cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
+
+            # Appliquer les filtres sur les résultats trouvés
+            filtered_recipes = search_by_filters(filtered_recipes, difficulty, diets, meal, cuisine, return_df=True)
+
+            # Affichage
+            for _, row in filtered_recipes.iterrows():
+                display_recipe(row)
+
 
 # app.py
 elif page == "Recommandations":
