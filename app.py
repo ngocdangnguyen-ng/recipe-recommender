@@ -183,23 +183,6 @@ elif page == "Recommendations":
             else:
                 st.info("No similar recipe to recommend after applying filters.")
 
-# Filtres généraux via la sidebar
-st.sidebar.header("Quick filters")
-difficulty = st.sidebar.radio("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
-diets = st.sidebar.radio("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
-meal = st.sidebar.radio("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"])
-cuisine = st.sidebar.radio("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
-
-if st.sidebar.button("Apply filters globally"):
-    result = apply_filters(df, difficulty, diets, meal, cuisine)
-    st.session_state['filtered_global'] = result
-
-if 'filtered_global' in st.session_state and not st.session_state['filtered_global'].empty:
-    st.subheader("Filtered Recipes:")
-    for _, row in st.session_state['filtered_global'].iterrows():
-        display_recipe(row)
-
-# CSS personnalisé
 st.markdown("""
     <style>
     .stButton>button {
