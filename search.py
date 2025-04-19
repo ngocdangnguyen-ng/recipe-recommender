@@ -41,29 +41,31 @@ def search_by_ingredients(df, ingredients):
         st.warning(f"Aucune recette trouvée pour la catégorie {category} !")
 
 
-def search_by_filters(df, difficulty, diets, meal, cuisine):
-    if difficulty == "All":
-        filtered_recipes = df
-    elif difficulty == "Under 1 Hour":
-        filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 60]
-    elif difficulty == "Under 45 Minutes":
-        filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 45]
-    elif difficulty == "Under 30 Minutes":
-        filtered_recipes = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30]
+def search_by_filters(df, difficulty, diets, meal, cuisine, return_df=False):
+    if difficulty != "All":
+        if difficulty == "Under 1 Hour":
+            df = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 60]
+        elif difficulty == "Under 45 Minutes":
+            df = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 45]
+        elif difficulty == "Under 30 Minutes":
+            df = df[(df["prep_time (in mins)"] + df["cook_time (in mins)"]) <= 30]
 
     if diets != "All":
-        filtered_recipes = filtered_recipes[filtered_recipes["diet"].str.contains(diets, case=False, na=False)]
+        df = df[df["diet"].str.contains(diets, case=False, na=False)]
     if meal != "All":
-        filtered_recipes = filtered_recipes[filtered_recipes["course"].str.contains(meal, case=False, na=False)]
+        df = df[df["course"].str.contains(meal, case=False, na=False)]
     if cuisine != "All":
-        filtered_recipes = filtered_recipes[filtered_recipes["cuisine"].str.contains(cuisine, case=False, na=False)]
+        df = df[df["cuisine"].str.contains(cuisine, case=False, na=False)]
 
-    if not filtered_recipes.empty:
-        st.write(f"### Recettes pour les filtres sélectionnés :")
-        for index, row in filtered_recipes.iterrows():
+    if return_df:
+        return df
+
+    if not df.empty:
+        for _, row in df.iterrows():
             display_recipe(row)
     else:
         st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
+
 
 def display_recipe(row):
     with st.container():
