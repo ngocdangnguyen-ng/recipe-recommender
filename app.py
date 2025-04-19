@@ -152,7 +152,7 @@ elif page == "Recommendations":
             if not filtered_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Filtered recommendations:")
-                for _, row in filtered_similar.head(10).iterrows():
+                for _, row in filtered_similar.iterrows():
                     display_recipe(row)
             else:
                 st.info("No similar recipe to recommend after applying filters.")
