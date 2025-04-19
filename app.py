@@ -36,35 +36,39 @@ def apply_filters(df, difficulty, diets, meal, cuisine):
         filtered = filtered[filtered["cuisine"].str.contains(cuisine, case=False, na=False)]
     return filtered
 
+
 def show_recommendations(query, df, recommender):
-    mask = df["name"].str.contains(query, case=False, na=False)
-    matching_recipes = df[mask]
+    mask = df["name"].str.contains(query, case=False, na=False)
+    matching_recipes = df[mask]
 
-    if matching_recipes.empty:
-        st.warning("No recipes found containing this word.")
-    else:
-        st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
-        for _, row in matching_recipes.iterrows():
-            display_recipe(row)
+    if matching_recipes.empty:
+        st.warning("No recipes found containing this word.")
+    else:
+        st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
+        for _, row in matching_recipes.iterrows():
+            display_recipe(row)
 
-    all_similar = pd.DataFrame()
-    for _, row in matching_recipes.iterrows():
-        similar = recommender.get_similar_recipes(row["name"])
-        all_similar = pd.concat([all_similar, similar])
+    all_similar = pd.DataFrame()
+    for _, row in matching_recipes.iterrows():
+        similar = recommender.get_similar_recipes(row["name"])
+        all_similar = pd.concat([all_similar, similar])
 
-    if "name" in all_similar.columns:
-        all_similar = all_similar.drop_duplicates(subset="name")
-        all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
-    else:
-        st.error("The 'name' column is missing in similar recipes.")
+    if "name" in all_similar.columns:
+        all_similar = all_similar.drop_duplicates(subset="name")
+        all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+    else:
+        st.error("The 'name' column is missing in similar recipes.")
 
-    if not all_similar.empty:
-        st.markdown("---")
-        st.subheader("📌 Recipes similar to what you searched for:")
-        for _, row in all_similar.head(10).iterrows():
-            display_recipe(row)
-    else:
-        st.info("No similar recipe to recommend.")
+    # Appliquer les filtres aux recommandations similaires
+    filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
+
+    if not filtered_similar.empty:
+        st.markdown("---")
+        st.subheader("📌 Filtered recommendations:")
+        for _, row in filtered_similar.head(10).iterrows():
+            display_recipe(row)
+    else:
+        st.info("No similar recipe to recommend after applying filters.")
 
 # Page: Home
 if page == "Home":
