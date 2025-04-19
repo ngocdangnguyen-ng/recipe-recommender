@@ -138,6 +138,14 @@ elif page == "Recommendations":
         else:
             show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
 
+st.sidebar.header("Filtres")
+difficulty = st.sidebar.radio("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
+diets = st.sidebar.radio("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
+meal = st.sidebar.radio("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"])
+cuisine = st.sidebar.radio("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
+if st.sidebar.button("Appliquer les filtres"):
+    search_by_filters(df, difficulty, diets, meal, cuisine)
+
 # Style personnalisé
 st.markdown("""
     <style>
