@@ -84,25 +84,20 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
 
 # Page: Home
 if page == "Home":
-    st.header("👋 Welcome to your recipe assistant!")
-    st.write("Use the filters and search below to explore recipes and get smart recommendations.")
-
-    # Filtres (dans la page)
-    st.markdown("### 🔍 Filters")
-    difficulty = st.radio("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"], key="home_diff")
-    diets = st.radio("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"], key="home_diets")
-    meal = st.radio("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"], key="home_meal")
-    cuisine = st.radio("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"], key="home_cuisine")
-
     st.markdown("### 🔍 Search by recipe name or keyword")
-    query = st.text_input("Enter a recipe name or keyword:", "")
-    if st.button("Search and Recommend"):
-        if not query:
-            st.error("Please enter a keyword.")
-        else:
-            show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
+    query = st.text_input("Enter a recipe name or keyword:")
+    
+    with st.expander("🔧 Show filters (click to expand)"):
+        difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"], key="home_diff")
+        diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"], key="home_diets")
+        meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"], key="home_meal")
+        cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"], key="home_cuisine")
 
-
+if st.button("Search and Recommend"):
+    if not query:
+        st.error("Please enter a keyword.")
+    else:
+        show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
 # Page: What's in your kitchen?
 elif page == "What's in your kitchen?":
     st.header("What's in your kitchen?")
