@@ -19,17 +19,11 @@ df = load_data()
 recommender = RecipeRecommender(df)
 
 # Barre de navigation
-page = st.sidebar.selectbox("Navigation", ["Home", "Search by name", "What's in your kitchen?", "Recommandations"])
+page = st.sidebar.selectbox("Navigation", ["Home", "What's in your kitchen?", "Recommandations"])
 
 if page == "Home":
     st.header("👋 Welcome to your recipe assistant !")
     st.write("Use the menu on the left to search or get recommendations.")
-
-elif page == "Search by name":
-    st.header("Search by name")
-    recipe_name = st.text_input("Enter a recipe name :", "")
-    if st.button("Search"):
-        search_by_name(df, recipe_name)
 
 elif page == "What's in your kitchen?":
     st.header("What's in your kitchen?")
