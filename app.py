@@ -106,8 +106,8 @@ elif page == "What's in your kitchen?":
             st.warning("No recipes match the selected filters.")
 
 # Page: Recommendations
-elif page == "Recommandations":
-    st.header("Recommandations")
+elif page == "Recommendations":
+    st.header("Recommendations")
     query = st.text_input("Enter a recipe name or keyword :")
 
     # Filtres à appliquer aux résultats similaires
