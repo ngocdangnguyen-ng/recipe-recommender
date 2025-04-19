@@ -20,31 +20,34 @@ page = st.sidebar.selectbox("Navigation", ["Home", "What's in your kitchen?", "R
 def apply_filters(df, difficulty, diets, meal, cuisine):
     filtered = df.copy()
     if difficulty != "All":
-        time_limit = {
-            "Under 1 Hour": 60,
-            "Under 45 Minutes": 45,
-            "Under 30 Minutes": 30
-        }.get(difficulty)
-        filtered = filtered[
-            (filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= time_limit
-        ]
-    if diets != "All":
+        # On vérifie que les colonnes de temps existent
+        if "prep_time (in mins)" in filtered.columns and "cook_time (in mins)" in filtered.columns:
+            time_limit = {
+                "Under 1 Hour": 60,
+                "Under 45 Minutes": 45,
+                "Under 30 Minutes": 30
+            }.get(difficulty)
+            filtered = filtered[
+                (filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= time_limit
+            ]
+    if diets != "All" and "diet" in filtered.columns:
         filtered = filtered[filtered["diet"].str.contains(diets, case=False, na=False)]
-    if meal != "All":
+    if meal != "All" and "course" in filtered.columns:
         filtered = filtered[filtered["course"].str.contains(meal, case=False, na=False)]
-    if cuisine != "All":
+    if cuisine != "All" and "cuisine" in filtered.columns:
         filtered = filtered[filtered["cuisine"].str.contains(cuisine, case=False, na=False)]
     return filtered
+
 
 def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine):
     # Nettoyage des espaces insécables dans le DataFrame
     df['name'] = df['name'].apply(lambda x: x.replace('\u00A0', ' ') if isinstance(x, str) else x)
-
+    
     # Recherche des recettes par mot-clé
     mask = df["name"].str.contains(query, case=False, na=False)
     matching_recipes = df[mask]
 
-    # Appliquer les filtres aux recettes trouvées
+    # Appliquer les filtres sur les recettes trouvées
     filtered_matching_recipes = apply_filters(matching_recipes, difficulty, diets, meal, cuisine)
 
     if filtered_matching_recipes.empty:
@@ -54,20 +57,20 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
         for _, row in filtered_matching_recipes.iterrows():
             display_recipe(row)
 
-    # Préparer les recommandations similaires uniquement depuis les recettes filtrées
+    # Préparer les recommandations similaires à partir des recettes filtrées
     all_similar = pd.DataFrame()
     for _, row in filtered_matching_recipes.iterrows():
         similar = recommender.get_similar_recipes(row["name"])
         all_similar = pd.concat([all_similar, similar])
 
-    # Nettoyage des doublons et exclusion des recettes déjà affichées
+    # Enlever les doublons et exclure les recettes déjà affichées
     if "name" in all_similar.columns:
         all_similar = all_similar.drop_duplicates(subset="name")
         all_similar = all_similar[~all_similar["name"].isin(filtered_matching_recipes["name"])]
     else:
         st.error("The 'name' column is missing in similar recipes.")
 
-    # Appliquer les filtres aux recommandations similaires
+    # Appliquer les filtres sur les recommandations similaires
     filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
 
     if not filtered_similar.empty:
