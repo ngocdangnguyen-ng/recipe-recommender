@@ -95,12 +95,12 @@ if page == "Home":
     if st.button("🍲 Show Recommendations"):
         show_recommendations(df, recommender, difficulty, diets, meal, cuisine)
 
-
-if st.button("Search and Recommend"):
-    if not query:
-        st.error("Please enter a keyword.")
-    else:
-        show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
+    if st.button("Search and Recommend"):
+        if not query:
+            st.error("Please enter a keyword.")
+        else:
+            show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
+            
 # Page: What's in your kitchen?
 elif page == "What's in your kitchen?":
     st.header("What's in your kitchen?")
