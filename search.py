@@ -4,23 +4,6 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-def search_by_name(df, recipe_name):
-
-    recommendations = df[df["name"].str.contains(recipe_name, case=False, na=False)]
-
-    if not recommendations.empty:
-
-        st.write("### Recettes similaires :")
-
-        for index, row in recommendations.iterrows():
-
-            display_recipe(row)
-
-    else:
-
-        st.warning("Aucune recette similaire trouvée ! Essayez un autre nom.")
-
-
 def search_by_ingredients(df, ingredients):
 
     if ingredients:
