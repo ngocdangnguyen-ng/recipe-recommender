@@ -38,8 +38,12 @@ def apply_filters(df, difficulty, diets, meal, cuisine):
 
 
 def show_recommendations(query, df, recommender):
-    mask = df["name"].str.contains(query, case=False, na=False)
-    matching_recipes = df[mask]
+    # Nettoyage des espaces insécables dans le DataFrame
+    df['name'] = df['name'].apply(lambda x: x.replace('\u00A0', ' ') if isinstance(x, str) else x)
+    
+    # Recherche des recettes par mot-clé
+    mask = df["name"].str.contains(query, case=False, na=False)
+    matching_recipes = df[mask]
 
     if matching_recipes.empty:
         st.warning("No recipes found containing this word.")
