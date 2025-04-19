@@ -38,6 +38,40 @@ def apply_filters(df, difficulty, diets, meal, cuisine):
         filtered = filtered[filtered["cuisine"].str.contains(cuisine, case=False, na=False)]
     return filtered
 
+def show_recommendations(query, df, recommender):
+    # Étape 1 : Rechercher les plats contenant le mot
+    mask = df["name"].str.contains(query, case=False, na=False)
+    matching_recipes = df[mask]
+
+    if matching_recipes.empty:
+        st.warning("No recipes found containing this word.")
+    else:
+        st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
+        for _, row in matching_recipes.iterrows():
+            display_recipe(row)
+
+    # Étape 2 : Recommandations basées sur les recettes trouvées
+    all_similar = pd.DataFrame()
+
+    for _, row in matching_recipes.iterrows():
+        similar = recommender.get_similar_recipes(row["name"])
+        all_similar = pd.concat([all_similar, similar])
+
+    # Enlever les doublons et les recettes déjà affichées
+    if "name" in all_similar.columns:
+        all_similar = all_similar.drop_duplicates(subset="name")
+        all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+    else:
+        st.error("The 'name' column is missing in similar recipes.")
+
+    if not all_similar.empty:
+        st.markdown("---")
+        st.subheader("📌 Recipes similar to what you searched for:")
+        for _, row in all_similar.head(10).iterrows():
+            display_recipe(row)
+    else:
+        st.info("No similar recipe to recommend.")
+
 if page == "Home":
     st.header("👋 Welcome to your recipe assistant !")
     st.write("Use the menu on the left to search or get recommendations.")
@@ -91,39 +125,7 @@ elif page == "Recommandations":
         if not query:
             st.error("Please enter a keyword.")
         else:
-            # Étape 1 : Rechercher les plats contenant le mot
-            mask = df["name"].str.contains(query, case=False, na=False)
-            matching_recipes = df[mask]
-
-            if matching_recipes.empty:
-                st.warning("No recipes found containing this word.")
-            else:
-                st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
-                for _, row in matching_recipes.iterrows():
-                    display_recipe(row)
-
-            # Étape 2 : Recommandations basées sur les recettes trouvées
-            all_similar = pd.DataFrame()
-
-            for _, row in matching_recipes.iterrows():
-                similar = recommender.get_similar_recipes(row["name"])
-                all_similar = pd.concat([all_similar, similar])
-
-            # Enlever les doublons et les recettes déjà affichées
-            if "name" in all_similar.columns:
-                all_similar = all_similar.drop_duplicates(subset="name")
-                all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
-            else:
-                st.error("The 'name' column is missing in similar recipes.")
-
-           # Vérification correcte d'empty sur un DataFrame
-            if not all_similar.empty:
-                st.markdown("---")
-                st.subheader("📌 Recipes similar to what you searched for:")
-                for _, row in all_similar.head(10).iterrows():  # Affichage des 10 premières suggestions
-                    display_recipe(row)
-            else:
-                st.info("No similar recipe to recommend.")
+            show_recommendations(query, df, recommender)
 
 # Filtres
 st.sidebar.header("Filtres")
