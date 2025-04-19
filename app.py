@@ -51,15 +51,26 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
         for _, row in matching_recipes.iterrows():
             display_recipe(row)
 
+    # Appliquer les filtres aux résultats trouvés
+    filtered_matching = apply_filters(matching_recipes, difficulty, diets, meal, cuisine)
+
+    if not filtered_matching.empty:
+        st.markdown("---")
+        st.subheader("📌 Filtered results:")
+        for _, row in filtered_matching.head(10).iterrows():
+            display_recipe(row)
+    else:
+        st.info("No recipes match the selected filters.")
+
     all_similar = pd.DataFrame()
-    for _, row in matching_recipes.iterrows():
+    for _, row in filtered_matching.iterrows():
         similar = recommender.get_similar_recipes(row["name"])
         all_similar = pd.concat([all_similar, similar])
 
     # Enlever les doublons et les recettes déjà affichées
     if "name" in all_similar.columns:
         all_similar = all_similar.drop_duplicates(subset="name")
-        all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+        all_similar = all_similar[~all_similar["name"].isin(filtered_matching["name"])]
     else:
         st.error("The 'name' column is missing in similar recipes.")
 
