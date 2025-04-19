@@ -86,20 +86,20 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
 if page == "Home":
     st.markdown("## 🍽️ Recipe Recommendation Based on Your Preferences")
 
+    # Menu déroulant pour les filtres
     with st.expander("🔧 Show filters"):
         difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"], key="filter_diff")
         diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"], key="filter_diets")
         meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"], key="filter_meal")
         cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"], key="filter_cuisine")
     
+    # Pas besoin de champ texte, on force une valeur par défaut
+    query = " "  # ou "all" selon ton implémentation
+    
+    # Affichage des recommandations après clic
     if st.button("🍲 Show Recommendations"):
-        show_recommendations(df, recommender, difficulty, diets, meal, cuisine)
+        show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
 
-    if st.button("Search and Recommend"):
-        if not query:
-            st.error("Please enter a keyword.")
-        else:
-            show_recommendations(query, df, recommender, difficulty, diets, meal, cuisine)
             
 # Page: What's in your kitchen?
 elif page == "What's in your kitchen?":
