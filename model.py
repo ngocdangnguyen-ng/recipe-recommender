@@ -25,7 +25,7 @@ def analyze_data(file_path):
     sns.barplot(x=list(ingredients), y=list(counts))
     plt.xticks(rotation=45)
     plt.title("Top 10 des ingrédients les plus utilisés")
-    plt.show()
+    plt.show()  # Afficher le graphique
 
     # 3️⃣ Identification des recettes les plus populaires
     if "rating" in df_cleaned.columns:
@@ -46,13 +46,13 @@ def analyze_data(file_path):
     plt.title("Distribution des temps de préparation")
     plt.xlabel("Temps de préparation (minutes)")
     plt.ylabel("Nombre de recettes")
-    plt.show()
+    plt.show()  # Afficher le graphique
 
     plt.figure(figsize=(8,8))
     df_cleaned["cuisine"].value_counts().plot.pie(autopct="%1.1f%%")
     plt.title("Répartition des types de cuisine")
     plt.ylabel("")
-    plt.show()
+    plt.show()  # Afficher le graphique
 
     print("\nAnalyse terminée, les graphiques et résultats sont affichés.")
     
@@ -61,4 +61,8 @@ def analyze_data(file_path):
 def recommend_recipes(df, recipe_name):
     return df[df["name"].str.contains(recipe_name, case=False, na=False)].head()
 
-
+# Exemple d'utilisation
+if __name__ == "__main__":
+    file_path = "Food_Recipe_cleaned.csv"
+    df_cleaned = analyze_data(file_path)
+    print(recommend_recipes(df_cleaned, "Recipe1"))
