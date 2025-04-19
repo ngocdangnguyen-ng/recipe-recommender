@@ -83,9 +83,19 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
 
 
 # Page: Home
-if page == "Home":
-    st.header("👋 Welcome to your recipe assistant!")
-    st.write("Use the menu on the left to search or get recommendations based on your preferences.")
+elif page == "Home":
+    st.title("🍽️ Bienvenue dans notre application de recettes !")
+    st.markdown("Utilisez les filtres ci-contre pour explorer des recettes selon vos préférences.")
+
+    # SIDEBAR : Filtres
+    st.sidebar.header("Filtres")
+    difficulty = st.sidebar.radio("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
+    diets = st.sidebar.radio("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
+    meal = st.sidebar.radio("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"])
+    cuisine = st.sidebar.radio("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
+    
+    if st.sidebar.button("Appliquer les filtres"):
+        search_by_filters(df, difficulty, diets, meal, cuisine)
 
 # Page: What's in your kitchen?
 elif page == "What's in your kitchen?":
