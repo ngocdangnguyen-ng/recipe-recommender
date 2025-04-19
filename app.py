@@ -51,43 +51,20 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
         for _, row in matching_recipes.iterrows():
             display_recipe(row)
 
-    # Appliquer les filtres aux résultats trouvés
-    filtered_matching = apply_filters(matching_recipes, difficulty, diets, meal, cuisine)
-
-    if not filtered_matching.empty:
-        st.markdown("---")
-        st.subheader("📌 Filtered results:")
-        for _, row in filtered_matching.head(10).iterrows():
-            display_recipe(row)
-    else:
-        st.info("No recipes match the selected filters.")
-
     all_similar = pd.DataFrame()
-    for _, row in filtered_matching.iterrows():
+    for _, row in matching_recipes.iterrows():
         similar = recommender.get_similar_recipes(row["name"])
         all_similar = pd.concat([all_similar, similar])
 
-    # Vérification de l'état des données similaires avant de filtrer
-    st.write("All similar recipes before filtering:")
-    st.write(all_similar.head())
-
-    # Vérifier que toutes les colonnes nécessaires sont présentes
-    required_columns = ["name", "prep_time (in mins)", "cook_time (in mins)", "diet", "course", "cuisine"]
-    missing_columns = [col for col in required_columns if col not in all_similar.columns]
-    if missing_columns:
-        st.error(f"The following columns are missing in similar recipes: {', '.join(missing_columns)}")
-        return
-
     # Enlever les doublons et les recettes déjà affichées
-    all_similar = all_similar.drop_duplicates(subset="name")
-    all_similar = all_similar[~all_similar["name"].isin(filtered_matching["name"])]
+    if "name" in all_similar.columns:
+        all_similar = all_similar.drop_duplicates(subset="name")
+        all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+    else:
+        st.error("The 'name' column is missing in similar recipes.")
 
     # Appliquer les filtres directement ici pour les recommandations similaires
     filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
-
-    # Vérification de l'état des résultats filtrés
-    st.write("Filtered similar recipes:")
-    st.write(filtered_similar.head())
 
     # Afficher les résultats après filtrage
     if not filtered_similar.empty:
