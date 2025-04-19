@@ -138,6 +138,10 @@ elif page == "Recommendations":
                 similar = recommender.get_similar_recipes(row["name"])
                 all_similar = pd.concat([all_similar, similar])
 
+            # Vérification de l'état des données similaires avant de filtrer
+            st.write("All similar recipes before filtering:")
+            st.write(all_similar.head())
+
             # Enlever les doublons et les recettes déjà affichées
             if "name" in all_similar.columns:
                 all_similar = all_similar.drop_duplicates(subset="name")
@@ -148,6 +152,10 @@ elif page == "Recommendations":
             # Appliquer les filtres à ces résultats
             filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
 
+            # Vérification de l'état des résultats filtrés
+            st.write("Filtered similar recipes:")
+            st.write(filtered_similar.head())
+
             # Afficher les résultats après filtrage
             if not filtered_similar.empty:
                 st.markdown("---")
@@ -156,6 +164,7 @@ elif page == "Recommendations":
                     display_recipe(row)
             else:
                 st.info("No similar recipe to recommend after applying filters.")
+
 
 # Filtres généraux via la sidebar
 st.sidebar.header("Quick filters")
