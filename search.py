@@ -92,5 +92,5 @@ def display_recipe(row):
                     try:
                         st.image(row["image_url"], caption=row.get("name", "Name not available"), width=300)  # Taille de l'image ajustée
                     except Exception as e:
-                        st.error(f"Erreur lors du chargement de l'image : {str(e)}")
+                        st.error(f"Error loading image : {str(e)}")
 
