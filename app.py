@@ -20,6 +20,23 @@ recommender = RecipeRecommender(df)
 
 # Barre de navigation
 page = st.sidebar.selectbox("Navigation", ["Home", "What's in your kitchen?", "Recommandations"])
+# Fonction pour appliquer les filtres
+def apply_filters(df, difficulty, diets, meal, cuisine):
+    filtered = df.copy()
+    if difficulty != "All":
+        if difficulty == "Under 1 Hour":
+            filtered = filtered[(filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= 60]
+        elif difficulty == "Under 45 Minutes":
+            filtered = filtered[(filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= 45]
+        elif difficulty == "Under 30 Minutes":
+            filtered = filtered[(filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= 30]
+    if diets != "All":
+        filtered = filtered[filtered["diet"].str.contains(diets, case=False, na=False)]
+    if meal != "All":
+        filtered = filtered[filtered["course"].str.contains(meal, case=False, na=False)]
+    if cuisine != "All":
+        filtered = filtered[filtered["cuisine"].str.contains(cuisine, case=False, na=False)]
+    return filtered
 
 if page == "Home":
     st.header("👋 Welcome to your recipe assistant !")
@@ -116,24 +133,6 @@ meal = st.sidebar.radio("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Di
 cuisine = st.sidebar.radio("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
 if st.sidebar.button("Appliquer les filtres"):
     search_by_filters(df, difficulty, diets, meal, cuisine)
-
-def apply_filters(df, difficulty, diets, meal, cuisine):
-    filtered = df.copy()
-    if difficulty != "All":
-        if difficulty == "Under 1 Hour":
-            filtered = filtered[(filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= 60]
-        elif difficulty == "Under 45 Minutes":
-            filtered = filtered[(filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= 45]
-        elif difficulty == "Under 30 Minutes":
-            filtered = filtered[(filtered["prep_time (in mins)"] + filtered["cook_time (in mins)"]) <= 30]
-    if diets != "All":
-        filtered = filtered[filtered["diet"].str.contains(diets, case=False, na=False)]
-    if meal != "All":
-        filtered = filtered[filtered["course"].str.contains(meal, case=False, na=False)]
-    if cuisine != "All":
-        filtered = filtered[filtered["cuisine"].str.contains(cuisine, case=False, na=False)]
-    return filtered
-
 
 # Style CSS personnalisé
 st.markdown("""
