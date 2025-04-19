@@ -123,65 +123,65 @@ elif page == "What's in your kitchen?":
             st.warning("No recipes match the selected filters.")
 
 # Page: Recommendations
+
 elif page == "Recommendations":
-    st.header("Recommandations")
-    query = st.text_input("Enter a recipe name or keyword:")
+    st.header("Recommandations")
+    query = st.text_input("Enter a recipe name or keyword:")
 
-    # Filtres à appliquer
-    difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"], key="rec_difficulty")
-    diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"], key="rec_diets")
-    meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"], key="rec_meal")
-    cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"], key="rec_cuisine")
+    # Filtres à appliquer
+    difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"], key="rec_difficulty")
+    diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"], key="rec_diets")
+    meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"], key="rec_meal")
+    cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"], key="rec_cuisine")
 
-    if st.button("Recommend"):
-        if not query:
-            st.error("Please enter a keyword.")
-        else:
-            # Étape 1 : Recherche des plats contenant le mot
-            mask = df["name"].str.contains(query, case=False, na=False)
-            matching_recipes = df[mask]
+    if st.button("Recommend"):
+        if not query:
+            st.error("Please enter a keyword.")
+        else:
+            # Étape 1 : Recherche des plats contenant le mot
+            mask = df["name"].str.contains(query, case=False, na=False)
+            matching_recipes = df[mask]
 
-            if matching_recipes.empty:
-                st.warning("No recipes found containing this word.")
-            else:
-                st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
-                for _, row in matching_recipes.iterrows():
-                    display_recipe(row)
+            if matching_recipes.empty:
+                st.warning("No recipes found containing this word.")
+            else:
+                st.success(f"{len(matching_recipes)} recipe(s) found containing '{query}':")
+                for _, row in matching_recipes.iterrows():
+                    display_recipe(row)
 
-            # Étape 2 : Recommandations basées sur les recettes trouvées
-            all_similar = pd.DataFrame()
+            # Étape 2 : Recommandations basées sur les recettes trouvées
+            all_similar = pd.DataFrame()
 
-            for _, row in matching_recipes.iterrows():
-                similar = recommender.get_similar_recipes(row["name"])
-                all_similar = pd.concat([all_similar, similar])
+            for _, row in matching_recipes.iterrows():
+                similar = recommender.get_similar_recipes(row["name"])
+                all_similar = pd.concat([all_similar, similar])
 
-            # Vérification de l'état des données similaires avant de filtrer
-            st.write("All similar recipes before filtering:")
-            st.write(all_similar.head())
+            # Vérification de l'état des données similaires avant de filtrer
+            st.write("All similar recipes before filtering:")
+            st.write(all_similar.head())
 
-            # Enlever les doublons et les recettes déjà affichées
-            if "name" in all_similar.columns:
-                all_similar = all_similar.drop_duplicates(subset="name")
-                all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
-            else:
-                st.error("The 'name' column is missing in similar recipes.")
+            # Enlever les doublons et les recettes déjà affichées
+            if "name" in all_similar.columns:
+                all_similar = all_similar.drop_duplicates(subset="name")
+                all_similar = all_similar[~all_similar["name"].isin(matching_recipes["name"])]
+            else:
+                st.error("The 'name' column is missing in similar recipes.")
 
-            # Appliquer les filtres à ces résultats
-            filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
+            # Appliquer les filtres à ces résultats
+            filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
 
-            # Vérification de l'état des résultats filtrés
-            st.write("Filtered similar recipes:")
-            st.write(filtered_similar.head())
+            # Vérification de l'état des résultats filtrés
+            st.write("Filtered similar recipes:")
+            st.write(filtered_similar.head())
 
-            # Afficher les résultats après filtrage
-            if not filtered_similar.empty:
-                st.markdown("---")
-                st.subheader("📌 Filtered recommendations:")
-                for _, row in filtered_similar.head(10).iterrows():
-                    display_recipe(row)
-            else:
-                st.info("No similar recipe to recommend after applying filters.")
-
+            # Afficher les résultats après filtrage
+            if not filtered_similar.empty:
+                st.markdown("---")
+                st.subheader("📌 Filtered recommendations:")
+                for _, row in filtered_similar.head(10).iterrows():
+                    display_recipe(row)
+            else:
+                st.info("No similar recipe to recommend after applying filters.")
 
 # Filtres généraux via la sidebar
 st.sidebar.header("Quick filters")
