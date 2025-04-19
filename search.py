@@ -14,7 +14,7 @@ def search_by_ingredients(df, ingredients):
 
         if not filtered_recipes.empty:
 
-            st.write("### Recettes trouvées :")
+            st.write("### Recipes found: ")
 
             for index, row in filtered_recipes.iterrows():
 
@@ -22,15 +22,15 @@ def search_by_ingredients(df, ingredients):
 
         else:
 
-            st.warning("Aucune recette trouvée avec ces ingrédients ! Essayez d'autres ingrédients.")
+            st.warning("No recipes found with these ingredients! Try other ingredients.")
 
     else:
 
-        st.warning("Veuillez entrer des ingrédients pour la recherche.")
+        st.warning("Please enter ingredients for search.")
     
     if not filtered_recipes.empty:
 
-        st.write(f"### Recettes pour la catégorie {category} :")
+        st.write(f"### Recipes for the category{category} :")
 
         for index, row in filtered_recipes.iterrows():
 
@@ -38,7 +38,7 @@ def search_by_ingredients(df, ingredients):
 
     else:
 
-        st.warning(f"Aucune recette trouvée pour la catégorie {category} !")
+        st.warning(f"No recipes found for the category {category} !")
 
 
 def search_by_filters(df, difficulty, diets, meal, cuisine, return_df=False):
@@ -64,7 +64,7 @@ def search_by_filters(df, difficulty, diets, meal, cuisine, return_df=False):
         for _, row in df.iterrows():
             display_recipe(row)
     else:
-        st.warning("Aucune recette trouvée pour les filtres sélectionnés !")
+        st.warning("No recipes found for the selected filters !")
 
 
 def display_recipe(row):
@@ -75,22 +75,22 @@ def display_recipe(row):
                 try:
                     st.image(row["image_url"], width=150)  # Taille de l'image ajustée
                 except Exception as e:
-                    st.error(f"Erreur lors du chargement de l'image : {str(e)}")
+                    st.error(f"Error loading image : {str(e)}")
         with col2:
-            st.subheader(row.get("name", "Nom non disponible"))
-            st.write("**Cuisine :**", row.get("cuisine", "Non spécifié"))
-            st.write("**Temps de préparation :**", row.get("prep_time (in mins)", "Non spécifié"), "minutes")
-            st.write("**Temps de cuisson :**", row.get("cook_time (in mins)", "Non spécifié"), "minutes")
-            with st.expander("Voir tout"):
-                st.write("**Description :**", row.get("description", "Non spécifié"))
-                st.write("**Course :**", row.get("course", "Non spécifié"))
-                st.write("**Diet :**", row.get("diet", "Non spécifié"))
-                st.write("**Ingrédients :**", row.get("ingredients_name", "Non spécifié"))
-                st.write("**Quantité des ingrédients :**", row.get("ingredients_quantity", "Non spécifié"))
-                st.write("**Instructions :**", row.get("instructions", "Non spécifié"))
+            st.subheader(row.get("name", "Name not available"))
+            st.write("**Cuisine :**", row.get("cuisine", "Unspecified"))
+            st.write("**Preparation time :**", row.get("prep_time (in mins)", "Unspecified"), "minutes")
+            st.write("**Cooking time :**", row.get("cook_time (in mins)", "Unspecified"), "minutes")
+            with st.expander("See all"):
+                st.write("**Description :**", row.get("description", "Unspecified"))
+                st.write("**Course :**", row.get("course", "Unspecified"))
+                st.write("**Diet :**", row.get("diet", "Unspecified"))
+                st.write("**Ingredients :**", row.get("ingredients_name", "Unspecified"))
+                st.write("**Quantity of ingredients :**", row.get("ingredients_quantity", "Unspecified"))
+                st.write("**Instructions :**", row.get("instructions", "Unspecified"))
                 if pd.notna(row.get("image_url")):
                     try:
-                        st.image(row["image_url"], caption=row.get("name", "Nom non disponible"), width=300)  # Taille de l'image ajustée
+                        st.image(row["image_url"], caption=row.get("name", "Name not available"), width=300)  # Taille de l'image ajustée
                     except Exception as e:
                         st.error(f"Erreur lors du chargement de l'image : {str(e)}")
 
