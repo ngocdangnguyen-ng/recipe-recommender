@@ -6,7 +6,7 @@ from io import BytesIO
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from recommender import RecipeRecommender
-from search import search_by_name, search_by_ingredients, search_by_filters, display_recipe
+from search import search_by_ingredients, search_by_filters, display_recipe
 
 # Chargement des données
 @st.cache_data
