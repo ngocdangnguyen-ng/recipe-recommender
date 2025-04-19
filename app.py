@@ -83,7 +83,7 @@ def show_recommendations(query, df, recommender, difficulty, diets, meal, cuisin
 
 
 # Page: Home
-elif page == "Home":
+if page == "Home":
     st.title("🍽️ Bienvenue dans notre application de recettes !")
     st.markdown("Utilisez les filtres ci-contre pour explorer des recettes selon vos préférences.")
 
