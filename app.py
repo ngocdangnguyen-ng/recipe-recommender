@@ -107,10 +107,10 @@ elif page == "What's in your kitchen?":
 
 # Page: Recommendations
 elif page == "Recommendations":
-    st.header("Recommendations")
-    query = st.text_input("Enter a recipe name or keyword :")
+    st.header("Recommandations")
+    query = st.text_input("Enter a recipe name or keyword:")
 
-    # Filtres à appliquer aux résultats similaires
+    # Filtres à appliquer
     difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"], key="rec_difficulty")
     diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"], key="rec_diets")
     meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"], key="rec_meal")
@@ -120,7 +120,7 @@ elif page == "Recommendations":
         if not query:
             st.error("Please enter a keyword.")
         else:
-            # Étape 1 : Rechercher les plats contenant le mot
+            # Étape 1 : Recherche des plats contenant le mot
             mask = df["name"].str.contains(query, case=False, na=False)
             matching_recipes = df[mask]
 
@@ -148,6 +148,7 @@ elif page == "Recommendations":
             # Appliquer les filtres à ces résultats
             filtered_similar = apply_filters(all_similar, difficulty, diets, meal, cuisine)
 
+            # Afficher les résultats après filtrage
             if not filtered_similar.empty:
                 st.markdown("---")
                 st.subheader("📌 Filtered recommendations:")
