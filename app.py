@@ -28,29 +28,41 @@ if page == "Home":
 elif page == "What's in your kitchen?":
     st.header("What's in your kitchen?")
     st.write("Find recipes based on what you already have at home!")
+    
+    # Saisie des ingrédients
     ingredients = st.text_input("Enter up to 3 ingredients separated by commas:", "")
+    
+    # Bouton de recherche
     if st.button("Find recipes"):
         ingredient_list = [ing.strip().lower() for ing in ingredients.split(",") if ing.strip()]
-        filtered_df = df[df['ingredients_name'].apply(lambda x: all(ing in x.lower() for ing in ingredient_list))]
-
-        if not filtered_df.empty:
-            st.success(f"{len(filtered_df)} recipes found with those ingredients.")
-            
-            # Appliquer les filtres
-            difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
-            diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
-            meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"])
-            cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
-
-            if st.button("Apply Filters"):
-                filtered_df = apply_filters(filtered_df, difficulty, diets, meal, cuisine)
-                if not filtered_df.empty:
-                    for _, row in filtered_df.iterrows():
-                        display_recipe(row)
-                else:
-                    st.warning("No recipes match the selected filters.")
+        filtered = df[df['ingredients_name'].apply(lambda x: all(ing in x.lower() for ing in ingredient_list))]
+    
+        if not filtered.empty:
+            st.success(f"{len(filtered)} recipes found with those ingredients.")
+            st.session_state['filtered_recipes'] = filtered  # Mémoriser les résultats
         else:
-            st.warning("No recipes found with these ingredients.")
+            st.warning("No recipes found with those ingredients.")
+            st.session_state['filtered_recipes'] = pd.DataFrame()
+    
+    # Vérifier si on a des résultats stockés
+    if 'filtered_recipes' in st.session_state and not st.session_state['filtered_recipes'].empty:
+        filtered_df = st.session_state['filtered_recipes']
+    
+        # Filtres
+        difficulty = st.selectbox("Difficulty", ["All", "Under 1 Hour", "Under 45 Minutes", "Under 30 Minutes"])
+        diets = st.selectbox("Diets", ["All", "Non Vegetarian", "Vegetarian", "Eggtarian"])
+        meal = st.selectbox("Meal", ["All", "Appetizer", "Breakfast", "Dessert", "Dinner", "Lunch", "Main Course", "Side Dish", "Snack"])
+        cuisine = st.selectbox("Cuisine", ["All", "Arab", "Asian", "Bengali", "Chinese", "European", "French", "Greek", "Indian", "Indonesian", "Italian", "Japanese", "Korean", "Malaysian", "Mexican", "Middle Eastern", "Tamil Nadun", "Thai"])
+    
+        # Appliquer les filtres automatiquement sans bouton
+        result = apply_filters(filtered_df, difficulty, diets, meal, cuisine)
+    
+        if not result.empty:
+            for _, row in result.iterrows():
+                display_recipe(row)
+        else:
+            st.warning("No recipes match the selected filters.")
+
 
 
 # app.py
