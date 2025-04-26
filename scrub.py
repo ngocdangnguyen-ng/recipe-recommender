@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 # Charger le fichier CSV
 file_path = "Food_Recipe.csv"
 df = pd.read_csv(file_path)
@@ -32,14 +31,11 @@ Q3 = df_cleaned["prep_time (in mins)"].quantile(0.75)
 IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
-
 df_cleaned = df_cleaned[(df_cleaned["prep_time (in mins)"] >= lower_bound) & (df_cleaned["prep_time (in mins)"] <= upper_bound)]
 
 # Enregistrer le dataset nettoyé
 df_cleaned.to_csv("~/Food_Recipe_cleaned.csv", index=False)
 print("\nLes données nettoyées ont été enregistrées sous 'Food_Recipe_cleaned.csv'.")
-
-import pandas as pd
 
 def clean_data(df):
     df_cleaned = df.dropna().drop_duplicates()
