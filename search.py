@@ -5,40 +5,21 @@ from PIL import Image
 from io import BytesIO
 
 def search_by_ingredients(df, ingredients):
-
     if ingredients:
-
         ingredient_list = ingredients.split(',')
-
-        filtered_recipes = df[df['ingredients_name'].apply(lambda x: all(ingredient.strip().lower() in x.lower() for ingredient in ingredient_list))]
+        filtered_recipes = df[df['ingredients_name'].apply(
+            lambda x: all(ingredient.strip().lower() in x.lower() for ingredient in ingredient_list)
+        )]
 
         if not filtered_recipes.empty:
-
             st.write("### Recipes found: ")
-
             for index, row in filtered_recipes.iterrows():
-
                 display_recipe(row)
-
         else:
-
             st.warning("No recipes found with these ingredients! Try other ingredients.")
-
     else:
-
         st.warning("Please enter ingredients for search.")
-    
-    if not filtered_recipes.empty:
 
-        st.write(f"### Recipes for the category{category} :")
-
-        for index, row in filtered_recipes.iterrows():
-
-            display_recipe(row)
-
-    else:
-
-        st.warning(f"No recipes found for the category {category} !")
 
 
 def search_by_filters(df, difficulty, diets, meal, cuisine, return_df=False):
