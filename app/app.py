@@ -1,12 +1,21 @@
 import streamlit as st
 import pandas as pd
+import sys
+import os
+
+# Add the parent directory to the Python path to access src modules
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.models.recommender import RecipeRecommender
 from src.utils.search import search_by_filters, display_recipe
 
  # Load data
 @st.cache_data
 def load_data():
-    df = pd.read_csv("Food_Recipe_cleaned.csv")
+    # Get the parent directory path and construct the path to the cleaned data
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_path = os.path.join(parent_dir, "data", "cleaned", "Food_Recipe_cleaned.csv")
+    df = pd.read_csv(data_path)
     df = df.dropna(subset=["image_url", "ingredients_name", "name"])
     return df
 
