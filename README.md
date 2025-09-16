@@ -111,8 +111,9 @@ recipe-recommender/
 * Enhance reporting and user feedback
 
 ## Contact
-* **LinkedIn:** https://www.linkedin.com/in/ngocnguyen-fr
-* **Email:** nndnguyen2016@gmail.com
+- **Email**: [nndnguyen2016@gmail.com](mailto:nndnguyen2016@gmail.com)
+- **LinkedIn**: [https://www.linkedin.com/in/ngocnguyen-fr](https://www.linkedin.com/in/ngocnguyen-fr)
+* **Portfolio:** [https://portfolio-qyyg.onrender.com](https://portfolio-qyyg.onrender.com)
 
 ---
 
